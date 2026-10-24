@@ -12,6 +12,7 @@ import com.zurrtum.create.content.redstone.RoseQuartzLampBlock;
 import com.zurrtum.create.content.schematics.requirement.ItemRequirement;
 import com.zurrtum.create.content.schematics.requirement.ItemRequirement.ItemUseType;
 import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
+import com.zurrtum.create.foundation.codec.CreateCodecs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentPatch;
@@ -152,7 +153,7 @@ public class CopycatBlockEntity extends SmartBlockEntity implements SpecialBlock
 
         consumedItem = view.read("Item", ItemStack.CODEC).orElse(ItemStack.EMPTY);
 
-        Optional<BlockState> state = view.read("Material", BlockState.CODEC);
+        Optional<BlockState> state = view.read("Material", CreateCodecs.BLOCK_STATE);
         if (state.isEmpty()) {
             consumedItem = ItemStack.EMPTY;
             return;
@@ -209,7 +210,7 @@ public class CopycatBlockEntity extends SmartBlockEntity implements SpecialBlock
         if (!stack.isEmpty()) {
             view.store("Item", ItemStack.CODEC, stack);
         }
-        view.store("Material", BlockState.CODEC, material);
+        view.store("Material", CreateCodecs.BLOCK_STATE, material);
     }
 
     @Override

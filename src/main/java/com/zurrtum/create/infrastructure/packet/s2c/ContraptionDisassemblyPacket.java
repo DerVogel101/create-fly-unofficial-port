@@ -22,6 +22,7 @@ public record ContraptionDisassemblyPacket(int entityId,
 
     @Override
     public void handle(ClientGamePacketListener listener) {
+        AllClientHandle.INSTANCE.ensureMainThread(listener, this);
         AllClientHandle.INSTANCE.onContraptionDisassembly(this);
     }
 

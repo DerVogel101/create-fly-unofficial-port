@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.logistics.vault;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.zurrtum.create.AllBlockEntityTypes;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
 import com.zurrtum.create.api.connectivity.ConnectivityHandler;
@@ -279,9 +280,9 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
 
         updateConnectivity = view.getBooleanOr("Uninitialized", false);
 
-        lastKnownPos = view.read("LastKnownPos", BlockPos.CODEC).orElse(null);
+        lastKnownPos = view.read("LastKnownPos", LenientCodecs.BLOCK_POS).orElse(null);
 
-        controller = view.read("Controller", BlockPos.CODEC).orElse(null);
+        controller = view.read("Controller", LenientCodecs.BLOCK_POS).orElse(null);
 
         if (isController()) {
             radius = view.getIntOr("Size", 0);
@@ -519,6 +520,9 @@ public class ItemVaultBlockEntity extends SmartBlockEntity implements IMultiBloc
         }
 
         public void read(ValueInput view) {
+            if (LenientCodecs.readSlotted(view, "Inventory", stacks)) {
+                return;
+            }
             ValueInput.TypedInputList<ItemStack> list = view.listOrEmpty("Inventory", ItemStack.CODEC);
             int i = 0;
             for (ItemStack itemStack : list) {

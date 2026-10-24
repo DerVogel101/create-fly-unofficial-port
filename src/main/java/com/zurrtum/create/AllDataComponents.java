@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.zurrtum.create.catnip.codecs.stream.CatnipStreamCodecBuilders;
 import com.zurrtum.create.catnip.codecs.stream.CatnipStreamCodecs;
 import com.zurrtum.create.content.equipment.toolbox.ToolboxInventory;
+import com.zurrtum.create.foundation.codec.CreateCodecs;
 import com.zurrtum.create.infrastructure.component.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -78,7 +79,7 @@ public class AllDataComponents {
 
     public static final DataComponentType<BlockState> SHAPER_BLOCK_USED = register(
         "shaper_block_used",
-        builder -> builder.persistent(BlockState.CODEC)
+        builder -> builder.persistent(CreateCodecs.BLOCK_STATE)
             .networkSynchronized(ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY))
     );
 

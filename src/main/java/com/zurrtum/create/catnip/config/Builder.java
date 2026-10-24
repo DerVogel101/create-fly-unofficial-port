@@ -132,6 +132,9 @@ public class Builder {
 
     public void read() {
         File file = new File(configDir, type + ".json");
+        if (!file.isFile()) {
+            return;
+        }
         try {
             final String fileContents = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
             object = GSON.fromJson(fileContents, JsonObject.class);

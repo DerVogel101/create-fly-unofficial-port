@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.processing.basin;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.google.common.collect.ImmutableList;
 import com.zurrtum.create.AllBlockEntityTypes;
 import com.zurrtum.create.AllBlockTags;
@@ -117,11 +118,11 @@ public class BasinBlockEntity extends SmartBlockEntity implements Clearable {
         super.read(view, clientPacket);
         itemCapability.read(view);
 
-        preferredSpoutput = view.read("PreferredSpoutput", Direction.CODEC).orElse(null);
+        preferredSpoutput = view.read("PreferredSpoutput", LenientCodecs.DIRECTION).orElse(null);
         disabledSpoutputs.clear();
         spoutputBuffer.clear();
         spoutputFluidBuffer.clear();
-        view.read("DisabledSpoutput", CreateCodecs.DIRECTION_LIST_CODEC).ifPresent(disabledSpoutputs::addAll);
+        view.read("DisabledSpoutput", LenientCodecs.DIRECTION_LIST).ifPresent(disabledSpoutputs::addAll);
         view.read("Overflow", CreateCodecs.ITEM_LIST_CODEC).ifPresent(spoutputBuffer::addAll);
         view.read("FluidOverflow", CreateCodecs.FLUID_LIST_CODEC).ifPresent(spoutputFluidBuffer::addAll);
 

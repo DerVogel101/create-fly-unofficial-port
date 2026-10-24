@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static com.zurrtum.create.Create.MOD_ID;
 
@@ -100,7 +101,7 @@ public class BuiltInPackSourceMixin {
         for (Path path : paths) {
             builder.pushAssetPath(PackType.SERVER_DATA, path.resolve(directory));
         }
-        addDataPack(consumer, true, builder.build(info));
+        addDataPack(consumer, true, info, builder.build(info).asResourcesSupplier());
     }
 
     @Unique
@@ -108,17 +109,22 @@ public class BuiltInPackSourceMixin {
         Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
             @Override
             @NonNull
-            public PackResources openPrimary(@Nullable PackLocationInfo info) {
+            public PackMetadataResources openMetadata(@Nullable PackLocationInfo info) {
                 return pack;
             }
 
             @Override
             @NonNull
-            public PackResources openFull(@NonNull PackLocationInfo info, @NonNull Metadata metadata) {
-                return pack;
+            public Stream<PackResources> openResources(@NonNull PackLocationInfo info, @NonNull Metadata metadata) {
+                return Stream.of(pack);
             }
         };
+        addDataPack(consumer, required, pack.location(), packFactory);
+    }
+
+    @Unique
+    private static void addDataPack(Consumer<Pack> consumer, boolean required, PackLocationInfo location, Pack.ResourcesSupplier packFactory) {
         PackSelectionConfig position = new PackSelectionConfig(required, Pack.Position.BOTTOM, false);
-        consumer.accept(Pack.readMetaAndCreate(pack.location(), packFactory, PackType.SERVER_DATA, position));
+        consumer.accept(Pack.readMetaAndCreate(location, packFactory, PackType.SERVER_DATA, position));
     }
 }

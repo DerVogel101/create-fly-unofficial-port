@@ -6,6 +6,7 @@ import com.zurrtum.create.client.flywheel.lib.model.baked.BufferEmitter;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.resources.model.geometry.BakedQuad.MaterialInfo;
+import net.minecraft.core.Direction;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 import org.joml.Vector4f;
@@ -33,7 +34,7 @@ public class EntityBlockSbbBuilder implements BufferEmitter {
     @Override
     public void put(float x, float y, float z, BakedQuad quad, QuadInstance instance) {
         MaterialInfo info = quad.materialInfo();
-        getBuffer(info.shade(), info.layer()).putBlockBakedQuad(x, y, z, quad, instance);
+        getBuffer(info.shadeDirectionOverride() != Direction.UP, info.layer()).putBlockBakedQuad(x, y, z, quad, instance);
     }
 
     public SuperByteBuffer build() {
@@ -171,6 +172,11 @@ public class EntityBlockSbbBuilder implements BufferEmitter {
 
         @Override
         public VertexConsumer setUv2(int u, int v) {
+            throw new UnsupportedOperationException("TemplateMeshBuffer only supports addVertex!");
+        }
+
+        @Override
+        public VertexConsumer setUv3(float u, float v) {
             throw new UnsupportedOperationException("TemplateMeshBuffer only supports addVertex!");
         }
 

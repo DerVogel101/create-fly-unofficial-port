@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.zurrtum.create.AllItems;
 import com.zurrtum.create.client.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -93,7 +92,7 @@ public class ExtendoGripRenderHandler {
             msr.rotateYDegrees(flip * 40.0F);
             ms.translate(flip * 0.05f, -0.3f, -0.3f);
 
-            AvatarRenderer<AbstractClientPlayer> playerrenderer = entityRenderDispatcher.getPlayerRenderer(player);
+            AvatarRenderer<?> playerrenderer = (AvatarRenderer<?>) entityRenderDispatcher.getRenderer(player);
             Identifier texture = player.getSkin().body().texturePath();
             if (rightHand) {
                 playerrenderer.renderRightHand(
@@ -138,12 +137,15 @@ public class ExtendoGripRenderHandler {
         return true;
     }
 
+    // 26.3 moved the first person hand items from ItemInHandRenderer to the local player
     private static ItemStack getRenderedMainHandStack(Minecraft mc) {
-        return mc.getEntityRenderDispatcher().getItemInHandRenderer().mainHandItem;
+        LocalPlayer player = mc.player;
+        return player == null ? ItemStack.EMPTY : player.firstPersonHandsAndItems().mainHandItem;
     }
 
     private static ItemStack getRenderedOffHandStack(Minecraft mc) {
-        return mc.getEntityRenderDispatcher().getItemInHandRenderer().offHandItem;
+        LocalPlayer player = mc.player;
+        return player == null ? ItemStack.EMPTY : player.firstPersonHandsAndItems().offHandItem;
     }
 
 }

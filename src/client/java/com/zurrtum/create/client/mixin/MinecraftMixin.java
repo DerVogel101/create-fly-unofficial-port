@@ -66,6 +66,7 @@ import com.zurrtum.create.client.foundation.blockEntity.behaviour.scrollValue.Sc
 import com.zurrtum.create.client.foundation.sound.SoundScapes;
 import com.zurrtum.create.client.foundation.utility.CameraAngleAnimationService;
 import com.zurrtum.create.client.foundation.utility.ServerSpeedProvider;
+import com.zurrtum.create.client.foundation.utility.SwingHelper;
 import com.zurrtum.create.client.model.obj.ObjLoader;
 import com.zurrtum.create.client.ponder.Ponder;
 import com.zurrtum.create.client.ponder.foundation.PonderIndex;
@@ -129,7 +130,7 @@ public abstract class MinecraftMixin {
         FlwImpl.freezeRegistries();
     }
 
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;updateRawMouseInput(Z)V"))
+    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;setAllowCursorChanges(Z)V"))
     private void register(GameConfig gameConfig, CallbackInfo ci) {
         if (RenderSystem.getDevice().getDeviceInfo().backendName().equals("OpenGL")) {
             resourceManager.registerReloadListener(FlwProgramsReloader.INSTANCE);
@@ -221,7 +222,7 @@ public abstract class MinecraftMixin {
         SymmetryHandlerClient.onClientTick(mc);
     }
 
-    @Inject(method = "renderFrame(Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;render(Lnet/minecraft/client/DeltaTracker;Z)V"))
+    @Inject(method = "renderFrame(Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;extract(Lnet/minecraft/client/DeltaTracker;Z)V"))
     private void render(boolean advanceGameTime, CallbackInfo ci) {
         TurntableHandler.gameRenderFrame((Minecraft) (Object) this);
     }
@@ -243,7 +244,7 @@ public abstract class MinecraftMixin {
         ) || FactoryPanelConnectionHandler.onRightClick(mc) || ChainConveyorConnectionHandler.onRightClick(mc) || TrainRelocatorClient.onClicked(
             mc) || ChainConveyorInteractionHandler.onUse(mc) || PackagePortTargetSelectionHandler.onUse(mc) || ChainPackageInteractionHandler.onUse(
             mc))) {
-            player.swing(InteractionHand.MAIN_HAND);
+            SwingHelper.swing(player, InteractionHand.MAIN_HAND);
             ci.cancel();
         } else if (ContraptionHandlerClient.rightClickingOnContraptionsGetsHandledLocally(mc, hand)) {
             ci.cancel();
@@ -271,7 +272,7 @@ public abstract class MinecraftMixin {
     private void doAttack(CallbackInfoReturnable<Boolean> cir) {
         Minecraft mc = (Minecraft) (Object) this;
         if (CurvedTrackInteraction.onClickInput(mc, true) || Create.GLUE_HANDLER.onMouseInput(mc, true)) {
-            player.swing(InteractionHand.MAIN_HAND);
+            SwingHelper.swing(player, InteractionHand.MAIN_HAND);
             cir.setReturnValue(false);
         }
     }

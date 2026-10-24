@@ -3,6 +3,7 @@ package com.zurrtum.create.infrastructure.packet.c2s;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.PacketUtils;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.PacketType;
 import net.minecraft.network.protocol.game.ServerGamePacketListener;
@@ -25,7 +26,9 @@ public record C2SHoldPacket(PacketType<Packet<ServerGamePacketListener>> id,
 
     @Override
     public void handle(ServerGamePacketListener listener) {
-        consumer.accept((ServerGamePacketListenerImpl) listener);
+        ServerGamePacketListenerImpl handler = (ServerGamePacketListenerImpl) listener;
+        PacketUtils.ensureRunningOnSameThread(this, handler, handler.server.packetProcessor());
+        consumer.accept(handler);
     }
 
     @Override

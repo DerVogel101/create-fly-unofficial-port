@@ -103,6 +103,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Prediction;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -137,6 +138,7 @@ public class AllHandle {
         ServerGamePacketListenerImpl listener,
         ConfigureSchematicannonPacket packet
     ) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         if (!(listener.player.containerMenu instanceof SchematicannonMenu menu)) {
             return;
         }
@@ -651,7 +653,7 @@ public class AllHandle {
                             int chainCost = ChainConveyorBlockEntity.getChainCost(targetPos.subtract(packet.pos()));
                             while (chainCost > 0) {
                                 player.getInventory()
-                                    .placeItemBackInInventory(new ItemStack(Items.IRON_CHAIN, Math.min(chainCost, 64)));
+                                    .placeItemBackInInventory(new ItemStack(Items.IRON_CHAIN, Math.min(chainCost, 64)), Prediction.SERVER_ONLY);
                                 chainCost -= 64;
                             }
                         }
@@ -743,7 +745,7 @@ public class AllHandle {
                         if (player.getMainHandItem().isEmpty()) {
                             player.setItemInHand(InteractionHand.MAIN_HAND, best.item.copy());
                         } else {
-                            player.getInventory().placeItemBackInInventory(best.item.copy());
+                            player.getInventory().placeItemBackInInventory(best.item.copy(), Prediction.SERVER_ONLY);
                         }
 
                         list.remove(best);
@@ -945,7 +947,7 @@ public class AllHandle {
                 if (blockEntity instanceof StockTickerBlockEntity be) {
                     ItemStack filter = packet.filter();
                     if (!filter.isEmpty() && filter.getItem() instanceof FilterItem) {
-                        listener.player.getInventory().placeItemBackInInventory(filter);
+                        listener.player.getInventory().placeItemBackInInventory(filter, Prediction.SERVER_ONLY);
                     }
                     return true;
                 }
@@ -1054,6 +1056,7 @@ public class AllHandle {
     }
 
     public static void onFilterScreen(ServerGamePacketListenerImpl listener, FilterScreenPacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer player = listener.player;
         CompoundTag tag = packet.data() == null ? new CompoundTag() : packet.data();
         FilterScreenPacket.Option option = packet.option();
@@ -1121,11 +1124,12 @@ public class AllHandle {
             return;
         }
         if (contraptionEntity.handlePlayerInteraction(sender, packet.localPos(), packet.face(), packet.hand())) {
-            sender.swing(packet.hand(), true);
+            sender.swing(packet.hand(), sender.getItemInHand(packet.hand()).getInteractAnimation(), true);
         }
     }
 
     public static void onClientMotion(ServerGamePacketListenerImpl listener, ClientMotionPacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer sender = listener.player;
         sender.setDeltaMovement(packet.motion());
         sender.setOnGround(packet.onGround());
@@ -1205,6 +1209,7 @@ public class AllHandle {
     }
 
     public static void onSchematicSync(ServerGamePacketListenerImpl listener, SchematicSyncPacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer player = listener.player;
         ItemStack stack;
         if (packet.slot() == -1) {
@@ -1368,6 +1373,7 @@ public class AllHandle {
     }
 
     public static void onGhostItemSubmit(ServerGamePacketListenerImpl listener, GhostItemSubmitPacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         AbstractContainerMenu containerMenu = listener.player.containerMenu;
         int slot = packet.slot();
         ItemStack item = packet.item();
@@ -1384,6 +1390,7 @@ public class AllHandle {
         ServerGamePacketListenerImpl listener,
         BlueprintAssignCompleteRecipePacket packet
     ) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer player = listener.player;
         if (player.containerMenu instanceof BlueprintMenu menu) {
             Container inventory = menu.ghostInventory;
@@ -1400,16 +1407,25 @@ public class AllHandle {
         ServerGamePacketListenerImpl listener,
         ConfigureSymmetryWandPacket packet
     ) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ItemStack stack = listener.player.getItemInHand(packet.hand());
         if (stack.getItem() instanceof SymmetryWandItem) {
             SymmetryWandItem.configureSettings(stack, packet.mirror());
         }
     }
 
+    public static void onSwingHand(ServerGamePacketListenerImpl listener, SwingHandPacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
+        ServerPlayer player = listener.player;
+        player.resetLastActionTime();
+        player.swing(packet.hand(), player.getItemInHand(packet.hand()).getInteractAnimation(), false);
+    }
+
     public static void onConfigureWorldshaper(
         ServerGamePacketListenerImpl listener,
         ConfigureWorldshaperPacket packet
     ) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ItemStack stack = listener.player.getItemInHand(packet.hand());
         if (stack.getItem() instanceof ZapperItem) {
             packet.configureZapper(stack);
@@ -1537,6 +1553,7 @@ public class AllHandle {
     }
 
     public static void onScheduleEdit(ServerGamePacketListenerImpl listener, ScheduleEditPacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer sender = listener.player;
         ItemStack mainHandItem = sender.getMainHandItem();
         if (!mainHandItem.is(AllItems.SCHEDULE)) {
@@ -1560,6 +1577,7 @@ public class AllHandle {
     }
 
     public static void onTrainEdit(ServerGamePacketListenerImpl listener, TrainEditPacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer sender = listener.player;
         ServerLevel world = sender.level();
         Train train = Create.RAILWAYS.sided(world).trains.get(packet.id());
@@ -1576,6 +1594,7 @@ public class AllHandle {
     }
 
     public static void onTrainRelocation(ServerGamePacketListenerImpl listener, TrainRelocationPacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer sender = listener.player;
         Train train = Create.RAILWAYS.trains.get(packet.trainId());
         Entity entity = sender.level().getEntity(packet.entityId());
@@ -1624,6 +1643,7 @@ public class AllHandle {
     }
 
     public static void onControlsInput(ServerGamePacketListenerImpl listener, ControlsInputPacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer player = listener.player;
         ServerLevel world = player.level();
         UUID uniqueID = player.getUUID();
@@ -1654,6 +1674,7 @@ public class AllHandle {
     }
 
     public static void onPlaceExtendedCurve(ServerGamePacketListenerImpl listener, PlaceExtendedCurvePacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ItemStack stack = listener.player.getItemInHand(
             packet.mainHand() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
         if (!stack.is(AllItemTags.TRACKS)) {
@@ -1727,6 +1748,7 @@ public class AllHandle {
     }
 
     public static void onTrainHUDUpdate(ServerGamePacketListenerImpl listener, TrainHUDUpdatePacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer player = listener.player;
         Train train = Create.RAILWAYS.sided(player.level()).trains.get(packet.trainId());
         if (train == null) {
@@ -1739,6 +1761,7 @@ public class AllHandle {
     }
 
     public static void onTrainHonk(ServerGamePacketListenerImpl listener, HonkPacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer player = listener.player;
         Train train = Create.RAILWAYS.sided(player.level()).trains.get(packet.trainId());
         if (train == null) {
@@ -1750,6 +1773,7 @@ public class AllHandle {
     }
 
     public static void onTrackGraphRequest(ServerGamePacketListenerImpl listener, TrackGraphRequestPacket packet) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer player = listener.player;
         int netId = packet.netId();
         for (TrackGraph trackGraph : Create.RAILWAYS.trackNetworks.values()) {
@@ -1871,6 +1895,7 @@ public class AllHandle {
         ServerGamePacketListenerImpl listener,
         ContraptionColliderLockPacketRequest packet
     ) {
+        PacketUtils.ensureRunningOnSameThread(packet, listener, listener.server.packetProcessor());
         ServerPlayer player = listener.player;
         player.level().getChunkSource().sendToTrackingPlayers(
             player,

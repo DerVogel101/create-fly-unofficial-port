@@ -2,6 +2,7 @@ package com.zurrtum.create.content.equipment.clipboard;
 
 import com.zurrtum.create.AllClientHandle;
 import com.zurrtum.create.AllDataComponents;
+import com.zurrtum.create.foundation.item.CustomBlockEntityTagItem;
 import com.zurrtum.create.foundation.recipe.ItemCopyingRecipe.SupportsItemCopying;
 import com.zurrtum.create.infrastructure.component.ClipboardContent;
 import com.zurrtum.create.infrastructure.component.ClipboardType;
@@ -18,7 +19,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class ClipboardBlockItem extends BlockItem implements SupportsItemCopying {
+public class ClipboardBlockItem extends BlockItem implements CustomBlockEntityTagItem, SupportsItemCopying {
 
     public ClipboardBlockItem(Block pBlock, Properties pProperties) {
         super(pBlock, pProperties);
@@ -37,7 +38,7 @@ public class ClipboardBlockItem extends BlockItem implements SupportsItemCopying
     }
 
     @Override
-    protected boolean updateCustomBlockEntityTag(
+    public boolean updateCustomBlockEntityTag(
         BlockPos pPos,
         Level pLevel,
         @Nullable Player pPlayer,

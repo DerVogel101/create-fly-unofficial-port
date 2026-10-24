@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.logistics.depot;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.zurrtum.create.AllSoundEvents;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
 import com.zurrtum.create.catnip.math.VecHelper;
@@ -519,6 +520,9 @@ public class DepotBehaviour extends BlockEntityBehaviour<SmartBlockEntity> imple
         }
 
         public void read(ValueInput view) {
+            if (LenientCodecs.readSlotted(view, "OutputBuffer", stacks)) {
+                return;
+            }
             ValueInput.TypedInputList<ItemStack> list = view.listOrEmpty("Inventory", ItemStack.CODEC);
             int i = 0;
             for (ItemStack itemStack : list) {

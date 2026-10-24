@@ -219,7 +219,7 @@ public class AllBlocks {
     public static final GearboxBlock GEARBOX = (GearboxBlock) register(
         AllBlockItemIds.GEARBOX,
         GearboxBlock::new,
-        Properties.ofFullCopy(Blocks.ANDESITE).mapColor(MapColor.PODZOL).pushReaction(PushReaction.PUSH_ONLY)
+        Properties.ofFullCopy(Blocks.ANDESITE).mapColor(MapColor.PODZOL).pushReaction(PushReaction.PUSH)
     );
     public static final WaterWheelBlock WATER_WHEEL = (WaterWheelBlock) register(
         AllBlockItemIds.WATER_WHEEL,
@@ -235,7 +235,7 @@ public class AllBlocks {
         AllBlockItemIds.WATER_WHEEL_STRUCTURAL,
         WaterWheelStructuralBlock::new,
         Properties.ofFullCopy(Blocks.STRIPPED_SPRUCE_WOOD).mapColor(MapColor.DIRT).noOcclusion()
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
     );
     public static final CasingBlock ANDESITE_CASING = (CasingBlock) register(
         AllBlockItemIds.ANDESITE_CASING,
@@ -401,7 +401,7 @@ public class AllBlocks {
             .overrideLootTable(Optional.of(ResourceKey.create(
                 Registries.LOOT_TABLE,
                 Identifier.fromNamespaceAndPath(MOD_ID, "blocks/mechanical_piston_head")
-            ))).mapColor(MapColor.DIRT).pushReaction(PushReaction.NORMAL)
+            ))).mapColor(MapColor.DIRT).pushReaction(PushReaction.PUSH_PULL)
     );
     public static final PistonExtensionPoleBlock PISTON_EXTENSION_POLE = (PistonExtensionPoleBlock) register(
         AllBlockItemIds.PISTON_EXTENSION_POLE,
@@ -410,7 +410,7 @@ public class AllBlocks {
             .overrideLootTable(Optional.of(ResourceKey.create(
                 Registries.LOOT_TABLE,
                 Identifier.fromNamespaceAndPath(MOD_ID, "blocks/piston_extension_pole")
-            ))).sound(SoundType.SCAFFOLDING).mapColor(MapColor.DIRT).pushReaction(PushReaction.NORMAL).forceSolidOn()
+            ))).sound(SoundType.SCAFFOLDING).mapColor(MapColor.DIRT).pushReaction(PushReaction.PUSH_PULL).forceSolidOn()
     );
     public static final SailBlock SAIL_FRAME = (SailBlock) register(
         AllBlockItemIds.SAIL_FRAME,
@@ -488,12 +488,12 @@ public class AllBlocks {
     public static final RopeBlock ROPE = (RopeBlock) register(
         AllBlockItemIds.ROPE,
         RopeBlock::new,
-        Properties.of().sound(SoundType.WOOL).mapColor(MapColor.COLOR_BROWN).pushReaction(PushReaction.BLOCK)
+        Properties.of().sound(SoundType.WOOL).mapColor(MapColor.COLOR_BROWN).pushReaction(PushReaction.IMMOVEABLE)
     );
     public static final MagnetBlock PULLEY_MAGNET = (MagnetBlock) register(
         AllBlockItemIds.PULLEY_MAGNET,
         MagnetBlock::new,
-        Properties.ofFullCopy(Blocks.ANDESITE).pushReaction(PushReaction.BLOCK)
+        Properties.ofFullCopy(Blocks.ANDESITE).pushReaction(PushReaction.IMMOVEABLE)
     );
     public static final MillstoneBlock MILLSTONE = (MillstoneBlock) register(
         AllBlockItemIds.MILLSTONE,
@@ -531,7 +531,7 @@ public class AllBlocks {
         AllBlockItemIds.INDUSTRIAL_IRON_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).isValidSpawn(Blocks::never).isRedstoneConductor(Blocks::never)
-            .isSuffocating(Blocks::never).isViewBlocking(Blocks::never).mapColor(MapColor.COLOR_GRAY)
+            .isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false).mapColor(MapColor.COLOR_GRAY)
     );
     public static final ConnectedGlassPaneBlock INDUSTRIAL_IRON_WINDOW_PANE = (ConnectedGlassPaneBlock) register(
         AllBlockItemIds.INDUSTRIAL_IRON_WINDOW_PANE,
@@ -542,7 +542,7 @@ public class AllBlocks {
         AllBlockItemIds.WEATHERED_IRON_WINDOW,
         WindowBlock::translucent,
         Properties.ofFullCopy(Blocks.GLASS).isValidSpawn(Blocks::never).isRedstoneConductor(Blocks::never)
-            .isSuffocating(Blocks::never).isViewBlocking(Blocks::never).mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
+            .isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false).mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
     );
     public static final ConnectedGlassPaneBlock WEATHERED_IRON_WINDOW_PANE = (ConnectedGlassPaneBlock) register(
         AllBlockItemIds.WEATHERED_IRON_WINDOW_PANE,
@@ -610,7 +610,7 @@ public class AllBlocks {
         AllBlockItemIds.CART_ASSEMBLER,
         CartAssemblerBlock::new,
         Properties.ofFullCopy(Blocks.ANDESITE).mapColor(MapColor.COLOR_GRAY).noOcclusion()
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
     );
     public static final MinecartAnchorBlock MINECART_ANCHOR = (MinecartAnchorBlock) register(
         AllBlockItemIds.MINECART_ANCHOR,
@@ -726,7 +726,7 @@ public class AllBlocks {
         AllBlockItemIds.CRUSHING_WHEEL_CONTROLLER,
         CrushingWheelControllerBlock::new,
         Properties.ofFullCopy(Blocks.ANDESITE).mapColor(MapColor.STONE).noLootTable().noCollision()
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
     );
     public static final Block RAW_ZINC_BLOCK = register(
         AllBlockItemIds.RAW_ZINC_BLOCK,
@@ -936,7 +936,7 @@ public class AllBlocks {
         AllBlockItemIds.TRACK,
         TrackBlock::andesite,
         Properties.ofFullCopy(Blocks.ANDESITE).mapColor(MapColor.METAL).strength(0.8F).sound(SoundType.METAL)
-            .noOcclusion().forceSolidOn().pushReaction(PushReaction.BLOCK)
+            .noOcclusion().forceSolidOn().pushReaction(PushReaction.IMMOVEABLE)
     );
     public static final FakeTrackBlock FAKE_TRACK = (FakeTrackBlock) register(
         AllBlockItemIds.FAKE_TRACK,
@@ -1089,7 +1089,7 @@ public class AllBlocks {
     public static final SchematicTableBlock SCHEMATIC_TABLE = (SchematicTableBlock) register(
         AllBlockItemIds.SCHEMATIC_TABLE,
         SchematicTableBlock::new,
-        Properties.ofFullCopy(Blocks.LECTERN).mapColor(MapColor.PODZOL).forceSolidOn().pushReaction(PushReaction.BLOCK)
+        Properties.ofFullCopy(Blocks.LECTERN).mapColor(MapColor.PODZOL).forceSolidOn().pushReaction(PushReaction.IMMOVEABLE)
     );
     public static final SchematicannonBlock SCHEMATICANNON = (SchematicannonBlock) register(
         AllBlockItemIds.SCHEMATICANNON,
@@ -1100,7 +1100,7 @@ public class AllBlocks {
         AllBlockItemIds.ORNATE_IRON_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).isValidSpawn(Blocks::never).isRedstoneConductor(Blocks::never)
-            .isSuffocating(Blocks::never).isViewBlocking(Blocks::never).mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
+            .isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false).mapColor(MapColor.TERRACOTTA_LIGHT_GRAY)
     );
     public static final MetalLadderBlock ANDESITE_LADDER = (MetalLadderBlock) register(
         AllBlockItemIds.ANDESITE_LADDER,
@@ -1238,19 +1238,19 @@ public class AllBlocks {
         AllBlockItemIds.FRAMED_GLASS,
         ConnectedGlassBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).isValidSpawn(Blocks::never).isRedstoneConductor(Blocks::never)
-            .isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final ConnectedGlassBlock HORIZONTAL_FRAMED_GLASS = (ConnectedGlassBlock) register(
         AllBlockItemIds.HORIZONTAL_FRAMED_GLASS,
         ConnectedGlassBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).isValidSpawn(Blocks::never).isRedstoneConductor(Blocks::never)
-            .isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final ConnectedGlassBlock VERTICAL_FRAMED_GLASS = (ConnectedGlassBlock) register(
         AllBlockItemIds.VERTICAL_FRAMED_GLASS,
         ConnectedGlassBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).isValidSpawn(Blocks::never).isRedstoneConductor(Blocks::never)
-            .isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final GlassPaneBlock TILED_GLASS_PANE = (GlassPaneBlock) register(
         AllBlockItemIds.TILED_GLASS_PANE,
@@ -1276,67 +1276,67 @@ public class AllBlocks {
         AllBlockItemIds.OAK_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.WOOD).isValidSpawn(Blocks::never)
-            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final WindowBlock SPRUCE_WINDOW = (WindowBlock) register(
         AllBlockItemIds.SPRUCE_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.PODZOL).isValidSpawn(Blocks::never)
-            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final WindowBlock BIRCH_WINDOW = (WindowBlock) register(
         AllBlockItemIds.BIRCH_WINDOW,
         WindowBlock::translucent,
         Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.SAND).isValidSpawn(Blocks::never)
-            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final WindowBlock JUNGLE_WINDOW = (WindowBlock) register(
         AllBlockItemIds.JUNGLE_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.DIRT).isValidSpawn(Blocks::never)
-            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final WindowBlock ACACIA_WINDOW = (WindowBlock) register(
         AllBlockItemIds.ACACIA_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.COLOR_ORANGE).isValidSpawn(Blocks::never)
-            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final WindowBlock DARK_OAK_WINDOW = (WindowBlock) register(
         AllBlockItemIds.DARK_OAK_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.COLOR_BROWN).isValidSpawn(Blocks::never)
-            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final WindowBlock MANGROVE_WINDOW = (WindowBlock) register(
         AllBlockItemIds.MANGROVE_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.COLOR_RED).isValidSpawn(Blocks::never)
-            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final WindowBlock CRIMSON_WINDOW = (WindowBlock) register(
         AllBlockItemIds.CRIMSON_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.CRIMSON_STEM).isValidSpawn(Blocks::never)
-            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final WindowBlock WARPED_WINDOW = (WindowBlock) register(
         AllBlockItemIds.WARPED_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.WARPED_STEM).isValidSpawn(Blocks::never)
-            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final WindowBlock CHERRY_WINDOW = (WindowBlock) register(
         AllBlockItemIds.CHERRY_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.TERRACOTTA_WHITE).isValidSpawn(Blocks::never)
-            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final WindowBlock BAMBOO_WINDOW = (WindowBlock) register(
         AllBlockItemIds.BAMBOO_WINDOW,
         WindowBlock::new,
         Properties.ofFullCopy(Blocks.GLASS).mapColor(MapColor.COLOR_YELLOW).isValidSpawn(Blocks::never)
-            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking(Blocks::never)
+            .isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never).isViewBlocking((state, level, pos, nearPlaneBox) -> false)
     );
     public static final ConnectedGlassPaneBlock OAK_WINDOW_PANE = (ConnectedGlassPaneBlock) register(
         AllBlockItemIds.OAK_WINDOW_PANE,

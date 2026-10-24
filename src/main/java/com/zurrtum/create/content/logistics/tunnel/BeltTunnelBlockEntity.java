@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.logistics.tunnel;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.mojang.datafixers.util.Pair;
 import com.zurrtum.create.AllBlockEntityTypes;
 import com.zurrtum.create.AllClientHandle;
@@ -74,13 +75,13 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity {
     @Override
     protected void read(ValueInput view, boolean clientPacket) {
         Set<Direction> newFlaps = new HashSet<>(6);
-        ValueInput.TypedInputList<Direction> flapsList = view.listOrEmpty("Flaps", Direction.CODEC);
+        ValueInput.TypedInputList<Direction> flapsList = view.listOrEmpty("Flaps", LenientCodecs.DIRECTION);
         for (Direction direction : flapsList) {
             newFlaps.add(direction);
         }
 
         sides.clear();
-        ValueInput.TypedInputList<Direction> sidesList = view.listOrEmpty("Sides", Direction.CODEC);
+        ValueInput.TypedInputList<Direction> sidesList = view.listOrEmpty("Sides", LenientCodecs.DIRECTION);
         for (Direction direction : sidesList) {
             sides.add(direction);
         }

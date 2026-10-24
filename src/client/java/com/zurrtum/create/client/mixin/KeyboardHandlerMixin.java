@@ -20,14 +20,14 @@ public class KeyboardHandlerMixin {
     @Final
     private Minecraft minecraft;
 
-    @Inject(method = "keyPress(JILnet/minecraft/client/input/KeyEvent;)V", at = @At(value = "RETURN", ordinal = 5))
-    private void onKeyReleased(long handle, int action, KeyEvent event, CallbackInfo ci) {
-        onKey(event, false);
-    }
-
-    @Inject(method = "keyPress(JILnet/minecraft/client/input/KeyEvent;)V", at = @At("TAIL"))
+    // every exit of keyPress, telling press/repeat from release by the GLFW action: picking the release path by return
+    // ordinal broke in 26.3 (ordinal 5 became the method end, so every key event arrived as release + press and the
+    // schematic tool menu (Alt) never closed)
+    @Inject(method = "keyPress(JILnet/minecraft/client/input/KeyEvent;)V", at = @At("RETURN"))
     private void onKey(long handle, int action, KeyEvent event, CallbackInfo ci) {
-        onKey(event, true);
+        if (handle == minecraft.getWindow().handle()) {
+            onKey(event, action != 0);
+        }
     }
 
     @Unique

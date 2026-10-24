@@ -8,12 +8,12 @@ import com.zurrtum.create.client.catnip.render.SuperByteBufferRenderState;
 import com.zurrtum.create.content.equipment.armor.BacktankBlock;
 import com.zurrtum.create.content.equipment.armor.BacktankItem;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,14 +49,16 @@ public class BacktankFeatureRenderer<S extends HumanoidRenderState, M extends Hu
         getParentModel().body.translateAndRotate(ms);
         ms.translate(-0.5f, 0.625f, 1.0f);
         ms.scale(1, -1, -1);
-        backtank.submit(ms, queue);
-        cogs.submit(ms, queue);
-        nob.submit(ms, queue);
         if (entityState.chestEquipment.hasFoil()) {
-            RenderType glint = RenderTypes.entityGlint();
+            // 26.3 has no glint overlay pass; the glint sheet draws the texture with the glint applied
+            RenderType glint = Sheets.cutoutBlockItemGlintSheet();
             backtank.submit(glint, ms, queue);
             cogs.submit(glint, ms, queue);
             nob.submit(glint, ms, queue);
+        } else {
+            backtank.submit(ms, queue);
+            cogs.submit(ms, queue);
+            nob.submit(ms, queue);
         }
         ms.popPose();
     }

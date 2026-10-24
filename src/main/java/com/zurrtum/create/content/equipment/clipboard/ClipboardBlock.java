@@ -1,7 +1,6 @@
 package com.zurrtum.create.content.equipment.clipboard;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.serialization.MapCodec;
 import com.zurrtum.create.AllBlockEntityTypes;
 import com.zurrtum.create.AllClientHandle;
 import com.zurrtum.create.AllShapes;
@@ -11,6 +10,7 @@ import com.zurrtum.create.foundation.block.IBE;
 import com.zurrtum.create.foundation.block.ProperWaterloggedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Prediction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
@@ -43,8 +43,6 @@ import java.util.List;
 public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock implements IBE<ClipboardBlockEntity>, IWrenchable, ProperWaterloggedBlock {
 
     public static final BooleanProperty WRITTEN = BooleanProperty.create("written");
-
-    public static final MapCodec<ClipboardBlock> CODEC = simpleCodec(ClipboardBlock::new);
 
     public ClipboardBlock(Properties pProperties) {
         super(pProperties);
@@ -129,7 +127,7 @@ public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock imple
             if (selected.isEmpty()) {
                 inv.setSelectedItem(cloneItemStack);
             } else {
-                inv.placeItemBackInInventory(cloneItemStack);
+                inv.placeItemBackInInventory(cloneItemStack, Prediction.SERVER_ONLY);
             }
         }
     }
@@ -198,10 +196,5 @@ public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock imple
     @Override
     public BlockEntityType<? extends ClipboardBlockEntity> getBlockEntityType() {
         return AllBlockEntityTypes.CLIPBOARD;
-    }
-
-    @Override
-    protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 }

@@ -6,6 +6,7 @@ import com.zurrtum.create.foundation.blockEntity.EntityControlStructureProcessor
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntitySpawnRequest;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -49,7 +50,8 @@ public class SchematicProcessor implements StructureProcessor, EntityControlStru
     @Override
     public boolean skip(Level world, StructureTemplate.StructureEntityInfo info) {
         return info.nbt.read("id", EntityType.CODEC)
-            .map(type -> !type.onlyOpCanSetNbt() && type.create(world, EntitySpawnReason.LOAD) != null).orElse(false);
+            .map(type -> !type.onlyOpCanSetNbt() && type.isEnabled(world.enabledFeatures())
+                && type.create(world, new EntitySpawnRequest(EntitySpawnReason.LOAD, true)) != null).orElse(false);
     }
 
     @Override

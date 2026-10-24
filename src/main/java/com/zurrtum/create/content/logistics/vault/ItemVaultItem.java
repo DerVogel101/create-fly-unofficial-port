@@ -5,6 +5,7 @@ import com.zurrtum.create.api.connectivity.ConnectivityHandler;
 import com.zurrtum.create.catnip.math.VecHelper;
 import com.zurrtum.create.content.equipment.symmetryWand.SymmetryWandItem;
 import com.zurrtum.create.foundation.block.IBE;
+import com.zurrtum.create.foundation.item.CustomBlockEntityTagItem;
 import com.zurrtum.create.foundation.item.ItemPlacementSoundContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class ItemVaultItem extends BlockItem {
+public class ItemVaultItem extends BlockItem implements CustomBlockEntityTagItem {
 
     public ItemVaultItem(Block p_i48527_1_, Properties p_i48527_2_) {
         super(p_i48527_1_, p_i48527_2_);
@@ -41,7 +42,7 @@ public class ItemVaultItem extends BlockItem {
     }
 
     @Override
-    protected boolean updateCustomBlockEntityTag(
+    public boolean updateCustomBlockEntityTag(
         BlockPos blockPos,
         Level level,
         @Nullable Player player,
@@ -64,7 +65,7 @@ public class ItemVaultItem extends BlockItem {
                 TypedEntityData.of(((IBE<?>) getBlock()).getBlockEntityType(), nbt)
             );
         }
-        return super.updateCustomBlockEntityTag(blockPos, level, player, itemStack, blockState);
+        return BlockItem.updateCustomBlockEntityTag(level, player, blockPos, itemStack);
     }
 
     private void tryMultiPlace(BlockPlaceContext ctx) {

@@ -16,7 +16,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import java.util.List;
 
 public class SequencedAssemblyDisplay extends CreateDisplay {
-    private static final Codec<List<Recipe<?>>> SEQUENCE_CODEC = Recipe.CODEC.listOf();
+    private static final Codec<List<Recipe<?>>> SEQUENCE_CODEC = Recipe.DIRECT_CODEC.listOf();
     public List<ItemStack> ingredient;
     public ProcessingOutput result;
     public int loops;

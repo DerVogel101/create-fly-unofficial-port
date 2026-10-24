@@ -1,7 +1,6 @@
 package com.zurrtum.create.content.processing.burner;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.zurrtum.create.AllBlockEntityTypes;
 import com.zurrtum.create.AllBlocks;
 import com.zurrtum.create.AllItems;
@@ -19,6 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Prediction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
@@ -48,7 +48,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.Locale;
 
 public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<BlazeBurnerBlockEntity>, IWrenchable, SpecialBlockItemRequirement {
-    public static final MapCodec<BlazeBurnerBlock> CODEC = simpleCodec(BlazeBurnerBlock::new);
     public static final EnumProperty<HeatLevel> HEAT_LEVEL = EnumProperty.create("blaze", HeatLevel.class);
 
     public BlazeBurnerBlock(Properties settings) {
@@ -160,7 +159,7 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
                 if (stack.isEmpty()) {
                     player.setItemInHand(hand, leftover);
                 } else if (!player.getInventory().add(leftover)) {
-                    player.drop(leftover, false);
+                    player.drop(leftover, false, Prediction.SERVER_ONLY);
                 }
             }
         }
@@ -275,11 +274,6 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
             random.nextFloat() * 0.7F + 0.6F,
             false
         );
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     public static HeatLevel getHeatLevelOf(BlockState blockState) {

@@ -3,9 +3,8 @@ package com.zurrtum.create.client.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.resource.GraphicsResourceAllocator;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.renderpearl.api.commands.RenderPass;
 import com.zurrtum.create.client.Create;
 import com.zurrtum.create.client.catnip.animation.AnimationTickHolder;
 import com.zurrtum.create.client.catnip.ghostblock.GhostBlocks;
@@ -18,10 +17,10 @@ import com.zurrtum.create.client.content.kinetics.chainConveyor.ChainConveyorInt
 import com.zurrtum.create.client.content.trains.entity.CarriageCouplingRenderer;
 import com.zurrtum.create.client.content.trains.track.TrackBlockOutline;
 import com.zurrtum.create.client.content.trains.track.TrackTargetingClient;
+import com.zurrtum.create.client.flywheel.backend.gl.RenderpearlGlState;
 import com.zurrtum.create.client.flywheel.impl.event.RenderContextHolder;
 import com.zurrtum.create.client.flywheel.impl.event.RenderContextImpl;
 import com.zurrtum.create.client.infrastructure.render.BreakingRenderStateInfo;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
@@ -31,7 +30,9 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockStateModelSet;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.chunk.ChunkSectionsToRender;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.state.level.BlockBreakingRenderState;
 import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
@@ -42,7 +43,6 @@ import net.minecraft.client.resources.model.sprite.AtlasManager;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4fc;
-import org.joml.Vector4f;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
@@ -91,29 +91,49 @@ public abstract class LevelRendererMixin implements RenderContextHolder {
         renderContext.updateProjection(projection);
     }
 
-    @Inject(method = "render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lorg/joml/Matrix4fc;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lorg/joml/Vector4f;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/DeltaTracker;getGameTimeDeltaPartialTick(Z)F"))
-    private void flywheel$beginRender(
-        GraphicsResourceAllocator resourceAllocator,
-        DeltaTracker deltaTracker,
-        boolean renderOutline,
-        CameraRenderState cameraState,
-        Matrix4fc modelViewMatrix,
-        GpuBufferSlice terrainFog,
-        Vector4f fogColor,
-        boolean shouldRenderSky,
-        CallbackInfo ci
-    ) {
+    @Inject(method = "render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Lorg/joml/Vector4f;ZZ)V", at = @At("HEAD"))
+    private void flywheel$beginRender(CallbackInfo ci) {
         renderContext.onStartLevelRender();
     }
 
-    @Inject(method = "lambda$addMainPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;executeSolid()V"))
-    private void flywheel$beforeSolid(CallbackInfo ci) {
+    @Inject(method = "executeSolid(Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;Lcom/mojang/renderpearl/api/commands/RenderPass;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;executeSolid(Lcom/mojang/renderpearl/api/commands/RenderPass;)V"))
+    private void flywheel$beforeSolid(
+        ChunkSectionsToRender chunkSectionsToRender,
+        FeatureRenderDispatcher.PreparedFrame featureFrame,
+        RenderPass renderPass,
+        CallbackInfo ci
+    ) {
         renderContext.beforeSolid();
+        RenderpearlGlState.invalidateRenderPass(renderPass);
     }
 
-    @Inject(method = "lambda$addMainPass$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;executeTranslucent()V"))
-    private void flywheel$beforeTranslucent(CallbackInfo ci) {
+    @Inject(method = "executeClassicTransparency(Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;Lcom/mojang/renderpearl/api/commands/RenderPass;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;executeTranslucent(Lcom/mojang/renderpearl/api/commands/RenderPass;)V"))
+    private void flywheel$beforeTranslucent(
+        ChunkSectionsToRender chunkSectionsToRender,
+        FeatureRenderDispatcher.PreparedFrame featureFrame,
+        RenderPass renderPass,
+        CallbackInfo ci
+    ) {
         renderContext.beforeTranslucent();
+        RenderpearlGlState.invalidateRenderPass(renderPass);
+    }
+
+    /**
+     * With improved transparency, translucent features go through vanilla's OIT passes, which Flywheel can't draw
+     * into, and executeClassicTransparency isn't called. Draw Flywheel's crumbling overlay at the end of the solid
+     * pass instead.
+     */
+    @Inject(method = "executeSolid(Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;Lcom/mojang/renderpearl/api/commands/RenderPass;)V", at = @At("TAIL"))
+    private void flywheel$beforeImprovedTransparency(
+        ChunkSectionsToRender chunkSectionsToRender,
+        FeatureRenderDispatcher.PreparedFrame featureFrame,
+        RenderPass renderPass,
+        CallbackInfo ci
+    ) {
+        if (gameRenderer.useImprovedTransparency()) {
+            renderContext.beforeTranslucent();
+            RenderpearlGlState.invalidateRenderPass(renderPass);
+        }
     }
 
     @Inject(method = "submitFeatures(Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/client/renderer/SubmitNodeCollector;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;finalizeGizmoCollection()V"))

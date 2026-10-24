@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.kinetics.mechanicalArm;
 
+import com.zurrtum.create.foundation.item.CustomBlockEntityTagItem;
 import com.zurrtum.create.infrastructure.packet.s2c.ArmPlacementRequestPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,7 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class ArmItem extends BlockItem {
+public class ArmItem extends BlockItem implements CustomBlockEntityTagItem {
 
     public ArmItem(Block p_i48527_1_, Properties p_i48527_2_) {
         super(p_i48527_1_, p_i48527_2_);
@@ -31,7 +32,7 @@ public class ArmItem extends BlockItem {
     }
 
     @Override
-    protected boolean updateCustomBlockEntityTag(
+    public boolean updateCustomBlockEntityTag(
         BlockPos pos,
         Level world,
         @Nullable Player player,
@@ -41,7 +42,7 @@ public class ArmItem extends BlockItem {
         if (!world.isClientSide() && player instanceof ServerPlayer sp) {
             sp.connection.send(new ArmPlacementRequestPacket(pos));
         }
-        return super.updateCustomBlockEntityTag(pos, world, player, p_195943_4_, p_195943_5_);
+        return BlockItem.updateCustomBlockEntityTag(world, player, pos, p_195943_4_);
     }
 
     @Override

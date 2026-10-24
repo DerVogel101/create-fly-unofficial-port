@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.zurrtum.create.client.flywheel.lib.model.baked.BufferPoseEmitter;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.resources.model.geometry.BakedQuad.MaterialInfo;
+import net.minecraft.core.Direction;
 
 public class EntityBlockTransformSbbBuilder extends EntityBlockSbbBuilder implements BufferPoseEmitter {
     private final Pose origin = new Pose();
@@ -19,7 +20,7 @@ public class EntityBlockTransformSbbBuilder extends EntityBlockSbbBuilder implem
     @Override
     public void put(float x, float y, float z, BakedQuad quad, QuadInstance instance) {
         MaterialInfo info = quad.materialInfo();
-        VertexConsumer buffer = getBuffer(info.shade(), info.layer());
+        VertexConsumer buffer = getBuffer(info.shadeDirectionOverride() != Direction.UP, info.layer());
         if (x != 0 || y != 0 || z != 0) {
             target.set(origin);
             target.translate(x, y, z);

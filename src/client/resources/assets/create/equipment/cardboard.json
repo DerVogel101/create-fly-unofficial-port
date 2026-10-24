@@ -10,5 +10,1591 @@
         "texture": "create:cardboard"
       }
     ]
-  }
+  },
+  "trim_overrides": [
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:bolt",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:bolt"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:bolt",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:bolt"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:bolt",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:bolt"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:bolt",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:bolt"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:bolt",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:bolt"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:bolt",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:bolt"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:bolt",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:bolt"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:bolt",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:bolt"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:bolt",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:bolt"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:bolt",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:bolt"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:bolt",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:bolt"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:coast",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:coast"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:coast",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:coast"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:coast",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:coast"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:coast",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:coast"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:coast",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:coast"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:coast",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:coast"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:coast",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:coast"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:coast",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:coast"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:coast",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:coast"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:coast",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:coast"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:coast",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:coast"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:dune",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:dune"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:dune",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:dune"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:dune",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:dune"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:dune",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:dune"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:dune",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:dune"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:dune",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:dune"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:dune",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:dune"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:dune",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:dune"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:dune",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:dune"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:dune",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:dune"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:dune",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:dune"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:eye",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:eye"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:eye",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:eye"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:eye",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:eye"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:eye",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:eye"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:eye",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:eye"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:eye",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:eye"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:eye",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:eye"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:eye",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:eye"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:eye",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:eye"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:eye",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:eye"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:eye",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:eye"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:flow",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:flow"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:flow",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:flow"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:flow",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:flow"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:flow",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:flow"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:flow",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:flow"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:flow",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:flow"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:flow",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:flow"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:flow",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:flow"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:flow",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:flow"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:flow",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:flow"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:flow",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:flow"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:host",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:host"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:host",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:host"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:host",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:host"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:host",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:host"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:host",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:host"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:host",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:host"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:host",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:host"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:host",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:host"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:host",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:host"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:host",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:host"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:host",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:host"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:raiser",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:raiser"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:raiser",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:raiser"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:raiser",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:raiser"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:raiser",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:raiser"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:raiser",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:raiser"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:raiser",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:raiser"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:raiser",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:raiser"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:raiser",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:raiser"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:raiser",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:raiser"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:raiser",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:raiser"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:raiser",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:raiser"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:rib",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:rib"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:rib",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:rib"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:rib",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:rib"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:rib",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:rib"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:rib",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:rib"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:rib",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:rib"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:rib",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:rib"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:rib",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:rib"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:rib",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:rib"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:rib",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:rib"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:rib",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:rib"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:sentry",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:sentry"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:sentry",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:sentry"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:sentry",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:sentry"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:sentry",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:sentry"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:sentry",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:sentry"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:sentry",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:sentry"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:sentry",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:sentry"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:sentry",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:sentry"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:sentry",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:sentry"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:sentry",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:sentry"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:sentry",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:sentry"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:shaper",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:shaper"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:shaper",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:shaper"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:shaper",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:shaper"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:shaper",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:shaper"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:shaper",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:shaper"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:shaper",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:shaper"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:shaper",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:shaper"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:shaper",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:shaper"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:shaper",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:shaper"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:shaper",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:shaper"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:shaper",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:shaper"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:silence",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:silence"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:silence",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:silence"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:silence",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:silence"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:silence",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:silence"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:silence",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:silence"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:silence",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:silence"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:silence",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:silence"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:silence",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:silence"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:silence",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:silence"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:silence",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:silence"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:silence",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:silence"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:snout",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:snout"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:snout",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:snout"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:snout",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:snout"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:snout",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:snout"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:snout",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:snout"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:snout",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:snout"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:snout",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:snout"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:snout",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:snout"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:snout",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:snout"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:snout",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:snout"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:snout",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:snout"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:spire",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:spire"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:spire",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:spire"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:spire",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:spire"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:spire",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:spire"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:spire",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:spire"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:spire",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:spire"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:spire",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:spire"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:spire",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:spire"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:spire",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:spire"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:spire",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:spire"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:spire",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:spire"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:tide",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:tide"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:tide",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:tide"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:tide",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:tide"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:tide",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:tide"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:tide",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:tide"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:tide",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:tide"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:tide",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:tide"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:tide",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:tide"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:tide",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:tide"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:tide",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:tide"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:tide",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:tide"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:vex",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:vex"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:vex",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:vex"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:vex",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:vex"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:vex",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:vex"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:vex",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:vex"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:vex",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:vex"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:vex",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:vex"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:vex",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:vex"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:vex",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:vex"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:vex",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:vex"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:vex",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:vex"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:ward",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:ward"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:ward",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:ward"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:ward",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:ward"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:ward",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:ward"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:ward",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:ward"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:ward",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:ward"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:ward",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:ward"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:ward",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:ward"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:ward",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:ward"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:ward",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:ward"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:ward",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:ward"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:wayfinder",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:wayfinder"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:wayfinder",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:wayfinder"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:wayfinder",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:wayfinder"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:wayfinder",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:wayfinder"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:wayfinder",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:wayfinder"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:wayfinder",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:wayfinder"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:wayfinder",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:wayfinder"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:wayfinder",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:wayfinder"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:wayfinder",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:wayfinder"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:wayfinder",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:wayfinder"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:wayfinder",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:wayfinder"
+      }
+    },
+    {
+      "palette": "minecraft:trim/amethyst",
+      "texture": "create:wild",
+      "when": {
+        "material": "minecraft:amethyst",
+        "pattern": "minecraft:wild"
+      }
+    },
+    {
+      "palette": "minecraft:trim/copper",
+      "texture": "create:wild",
+      "when": {
+        "material": "minecraft:copper",
+        "pattern": "minecraft:wild"
+      }
+    },
+    {
+      "palette": "minecraft:trim/diamond",
+      "texture": "create:wild",
+      "when": {
+        "material": "minecraft:diamond",
+        "pattern": "minecraft:wild"
+      }
+    },
+    {
+      "palette": "minecraft:trim/emerald",
+      "texture": "create:wild",
+      "when": {
+        "material": "minecraft:emerald",
+        "pattern": "minecraft:wild"
+      }
+    },
+    {
+      "palette": "minecraft:trim/gold",
+      "texture": "create:wild",
+      "when": {
+        "material": "minecraft:gold",
+        "pattern": "minecraft:wild"
+      }
+    },
+    {
+      "palette": "minecraft:trim/iron",
+      "texture": "create:wild",
+      "when": {
+        "material": "minecraft:iron",
+        "pattern": "minecraft:wild"
+      }
+    },
+    {
+      "palette": "minecraft:trim/lapis",
+      "texture": "create:wild",
+      "when": {
+        "material": "minecraft:lapis",
+        "pattern": "minecraft:wild"
+      }
+    },
+    {
+      "palette": "minecraft:trim/netherite",
+      "texture": "create:wild",
+      "when": {
+        "material": "minecraft:netherite",
+        "pattern": "minecraft:wild"
+      }
+    },
+    {
+      "palette": "minecraft:trim/quartz",
+      "texture": "create:wild",
+      "when": {
+        "material": "minecraft:quartz",
+        "pattern": "minecraft:wild"
+      }
+    },
+    {
+      "palette": "minecraft:trim/redstone",
+      "texture": "create:wild",
+      "when": {
+        "material": "minecraft:redstone",
+        "pattern": "minecraft:wild"
+      }
+    },
+    {
+      "palette": "minecraft:trim/resin",
+      "texture": "create:wild",
+      "when": {
+        "material": "minecraft:resin",
+        "pattern": "minecraft:wild"
+      }
+    }
+  ]
 }

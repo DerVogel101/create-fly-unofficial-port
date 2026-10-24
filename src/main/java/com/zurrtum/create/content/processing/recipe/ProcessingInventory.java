@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.processing.recipe;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.zurrtum.create.infrastructure.items.SidedItemInventory;
 import com.zurrtum.create.infrastructure.transfer.SlotRangeCache;
 import net.minecraft.core.Direction;
@@ -138,6 +139,13 @@ public class ProcessingInventory implements SidedItemInventory {
     }
 
     public void read(ValueInput view) {
+        // Create on other loaders: {Size, Items, ProcessingTime, RecipeTime} under "Inventory"
+        if (LenientCodecs.readSlotted(view, "Inventory", stacks)) {
+            ValueInput inventory = view.childOrEmpty("Inventory");
+            remainingTime = inventory.getFloatOr("ProcessingTime", 0);
+            recipeDuration = inventory.getFloatOr("RecipeTime", 0);
+            return;
+        }
         ValueInput.TypedInputList<ItemStack> list = view.listOrEmpty("Inventory", ItemStack.OPTIONAL_CODEC);
         int i = 0;
         for (ItemStack itemStack : list) {

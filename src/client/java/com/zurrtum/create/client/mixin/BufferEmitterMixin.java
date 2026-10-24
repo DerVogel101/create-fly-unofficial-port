@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,7 +21,7 @@ public interface BufferEmitterMixin extends FabricEmitterSupplier {
     default @NonNull QuadEmitter quadEmitter() {
         return Renderer.get().quadEmitter(quad -> quad.buffer(
             OverlayTexture.NO_OVERLAY,
-            getBuffer(quad.diffuseShade(), quad.chunkLayer())
+            getBuffer(quad.shadeDirectionOverride() != Direction.UP, quad.chunkLayer())
         ));
     }
 }

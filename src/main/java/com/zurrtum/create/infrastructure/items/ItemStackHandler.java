@@ -1,5 +1,6 @@
 package com.zurrtum.create.infrastructure.items;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
 import com.zurrtum.create.foundation.codec.CreateCodecs;
@@ -72,6 +73,9 @@ public class ItemStackHandler implements ItemInventory {
     }
 
     public void read(ValueInput view) {
+        if (LenientCodecs.readSlotted(view, "Inventory", stacks)) {
+            return;
+        }
         ValueInput.TypedInputList<ItemStack> list = view.listOrEmpty("Inventory", ItemStack.CODEC);
         int i = 0;
         for (ItemStack itemStack : list) {

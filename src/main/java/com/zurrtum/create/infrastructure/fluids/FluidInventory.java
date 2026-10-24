@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntSortedMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.core.component.Removed;
 import net.minecraft.world.Clearable;
 import org.jspecify.annotations.Nullable;
 
@@ -963,7 +964,7 @@ public interface FluidInventory extends Clearable, Iterable<FluidStack> {
     default FluidStack removeMaxSize(FluidStack stack, Optional<Integer> max) {
         PatchedDataComponentMap components = stack.directComponents();
         components.ensureMapOwnership();
-        components.patch.remove(AllDataComponents.FLUID_MAX_CAPACITY, max);
+        components.patch.remove(AllDataComponents.FLUID_MAX_CAPACITY, Removed.nullToRemoved(max.orElse(null)));
         return stack;
     }
 
@@ -1000,7 +1001,8 @@ public interface FluidInventory extends Clearable, Iterable<FluidStack> {
     default void setMaxSize(FluidStack stack, Optional<Integer> max) {
         PatchedDataComponentMap components = stack.directComponents();
         components.ensureMapOwnership();
-        components.patch.put(AllDataComponents.FLUID_MAX_CAPACITY, max);
+        // 26.3 patch values are the value itself or Removed (26.2 stored Optionals)
+        components.patch.put(AllDataComponents.FLUID_MAX_CAPACITY, Removed.nullToRemoved(max.orElse(null)));
     }
 
     void setStack(int slot, FluidStack stack);

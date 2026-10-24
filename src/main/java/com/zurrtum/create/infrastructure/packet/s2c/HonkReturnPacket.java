@@ -28,6 +28,7 @@ public record HonkReturnPacket(UUID trainId, boolean isHonk) implements Packet<C
 
     @Override
     public void handle(ClientGamePacketListener listener) {
+        AllClientHandle.INSTANCE.ensureMainThread(listener, this);
         AllClientHandle.INSTANCE.onTrainHonkReturn(this);
     }
 

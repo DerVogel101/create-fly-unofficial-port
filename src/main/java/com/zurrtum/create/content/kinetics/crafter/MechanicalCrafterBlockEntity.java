@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.kinetics.crafter;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.zurrtum.create.*;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
 import com.zurrtum.create.api.contraption.transformable.TransformableBlockEntity;
@@ -134,7 +135,11 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
         }
 
         public void read(ValueInput view) {
-            stack = view.read("Stack", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY);
+            stack = view.read("Stack", ItemStack.OPTIONAL_CODEC).orElseGet(() -> {
+                // Create on other loaders: "Inventory" as {Size: 1, Items}
+                java.util.List<ItemStack> slot = net.minecraft.core.NonNullList.withSize(1, ItemStack.EMPTY);
+                return LenientCodecs.readSlotted(view, "Inventory", slot) ? slot.getFirst() : ItemStack.EMPTY;
+            });
         }
     }
 
@@ -251,7 +256,9 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
 
         inventory.read(view);
         input.read(view.childOrEmpty("ConnectedInput"));
-        groupedItems = view.read("GroupedItems", GroupedItems.CODEC).orElseGet(GroupedItems::new);
+        // Create on other loaders saves the grid as a list of {x, y, item}
+        groupedItems = view.read("GroupedItems", GroupedItems.CODEC).or(() -> view.child("GroupedItems").map(GroupedItems::read))
+            .orElseGet(GroupedItems::new);
         phase = Phase.IDLE;
         String name = view.getStringOr("Phase", "");
         for (Phase phase : Phase.values()) {
@@ -269,7 +276,8 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 16);
         }
         if (phaseBefore != phase && phase == Phase.CRAFTING) {
-            groupedItemsBeforeCraft = view.read("GroupedItemsBeforeCraft", GroupedItems.CODEC).orElse(before);
+            groupedItemsBeforeCraft = view.read("GroupedItemsBeforeCraft", GroupedItems.CODEC)
+                .or(() -> view.child("GroupedItemsBeforeCraft").map(GroupedItems::read)).orElse(before);
         }
         if (phaseBefore == Phase.EXPORTING && phase == Phase.WAITING) {
             if (before.onlyEmptyItems()) {

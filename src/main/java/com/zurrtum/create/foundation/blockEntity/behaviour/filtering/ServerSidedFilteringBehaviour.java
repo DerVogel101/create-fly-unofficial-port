@@ -73,7 +73,11 @@ public class ServerSidedFilteringBehaviour extends ServerFilteringBehaviour {
     @Override
     public void read(ValueInput view, boolean clientPacket) {
         view.childrenListOrEmpty("Filters").forEach(item -> {
-            Direction side = item.read("Side", Direction.CODEC).orElseThrow();
+            // Create on other loaders saves the side as its 3D data value
+            Direction side = item.read("Side", Direction.CODEC).or(() -> item.getInt("Side").map(Direction::from3DDataValue)).orElse(null);
+            if (side == null) {
+                return;
+            }
             ServerFilteringBehaviour filter = sidedFilters.get(side);
             if (filter != null) {
                 filter.read(item, clientPacket);

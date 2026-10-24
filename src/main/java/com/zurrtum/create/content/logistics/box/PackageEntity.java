@@ -26,6 +26,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.MoveSimulationType;
+import net.minecraft.world.entity.PositionPath;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -121,8 +123,8 @@ public class PackageEntity extends LivingEntity {
     }
 
     @Override
-    public boolean canSimulateMovement() {
-        return true;
+    public MoveSimulationType getMoveSimulationType() {
+        return MoveSimulationType.SERVER_AND_CLIENT;
     }
 
     @Override
@@ -151,13 +153,13 @@ public class PackageEntity extends LivingEntity {
 
         Vec3 clientPos = position().add(motion);
         if (isInterpolating()) {
-            clientPos = VecHelper.lerp(Math.min(1, tickCount / 20.0f), clientPos, getInterpolation().position());
+            clientPos = VecHelper.lerp(Math.min(1, tickCount / 20.0f), clientPos, getInterpolation().target().position());
         }
         if (tickCount < 5) {
             setPos(clientPos.x, clientPos.y, clientPos.z);
         }
         if (tickCount < 20) {
-            getInterpolation().interpolateTo(clientPos, getYRot(), getXRot());
+            getInterpolation().interpolateTo(PositionPath.of(clientPos), getYRot(), getXRot(), true);
         }
     }
 

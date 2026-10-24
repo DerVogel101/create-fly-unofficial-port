@@ -1,16 +1,18 @@
 package com.zurrtum.create.client.flywheel.backend;
 
-import com.mojang.blaze3d.GpuFormat;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.systems.GpuDevice;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.AddressMode;
-import com.mojang.blaze3d.textures.FilterMode;
+import com.mojang.renderpearl.api.GpuFormat;
+import com.mojang.renderpearl.api.device.GpuDevice;
+import com.mojang.renderpearl.api.textures.AddressMode;
+import com.mojang.renderpearl.api.textures.FilterMode;
 import com.zurrtum.create.client.flywheel.lib.util.ResourceUtil;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.UnknownNullability;
+import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 
@@ -31,12 +33,25 @@ public class NoiseTextures {
             return;
         }
 
-        try (var is = optional.get().open()) {
-            var image = NativeImage.read(NativeImage.Format.LUMINANCE, is);
-            BLUE_NOISE = new NoiseTexture(image);
+        try (var is = optional.get().open(); var image = NativeImage.read(is)) {
+            BLUE_NOISE = new NoiseTexture(toLuminance(image));
         } catch (IOException e) {
 
         }
+    }
+
+    // 26.3 always loads images as RGBA, but the noise texture is uploaded as a single R8 channel
+    private static NativeImage toLuminance(NativeImage rgba) {
+        int width = rgba.getWidth();
+        int height = rgba.getHeight();
+        NativeImage luminance = new NativeImage(NativeImage.Format.LUMINANCE, width, height, false);
+        long ptr = luminance.getPointer();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                MemoryUtil.memPutByte(ptr + x + (long) y * width, (byte) ARGB.red(rgba.getPixel(x, y)));
+            }
+        }
+        return luminance;
     }
 
     private static class NoiseTexture extends AbstractTexture {

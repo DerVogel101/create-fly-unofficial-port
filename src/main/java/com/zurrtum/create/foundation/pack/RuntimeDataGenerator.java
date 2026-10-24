@@ -15,6 +15,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagEntry;
 import net.minecraft.tags.TagFile;
 import net.minecraft.tags.TagKey;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ConcretePowderBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -52,6 +54,8 @@ public class RuntimeDataGenerator {
         .put(Mods.DD.asResource("blooming"), Mods.DD.asResource("bloom")).build();
 
     public static void insertIntoPack(DynamicPack dynamicPack) {
+        blocksMotionTag(dynamicPack);
+
         Identifier cuttingId = BuiltInRegistries.RECIPE_TYPE.getKey(AllRecipeTypes.CUTTING);
         Identifier splashingId = BuiltInRegistries.RECIPE_TYPE.getKey(AllRecipeTypes.SPLASHING);
         assert cuttingId != null;
@@ -87,6 +91,28 @@ public class RuntimeDataGenerator {
     // logs/woods -> stripped variants
     // logs/woods both stripped and non stripped -> planks
     // planks -> stairs, slabs, fences, fence gates, doors, trapdoors, pressure plates, buttons and signs
+    /**
+     * 26.3 replaced the shape based {@code BlockState#blocksMotion()} with the hand maintained blocks_motion tags.
+     * Create's blocks are added with the rule vanilla's own tag follows: solid in any of their states.
+     */
+    private static void blocksMotionTag(DynamicPack dynamicPack) {
+        List<TagEntry> entries = new ArrayList<>();
+        for (Block block : BuiltInRegistries.BLOCK) {
+            Identifier id = BuiltInRegistries.BLOCK.getKey(block);
+            if (MOD_ID.equals(id.getNamespace()) && block.getStateDefinition().getPossibleStates().stream()
+                .anyMatch(BlockState::isSolid)) {
+                entries.add(TagEntry.element(id));
+            }
+        }
+        if (entries.isEmpty()) {
+            return;
+        }
+        dynamicPack.put(
+            BlockTags.BLOCKS_MOTION_NO_LEAVES.location().withPrefix("tags/block/"),
+            TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(entries, false)).result().orElseThrow()
+        );
+    }
+
     private static void cuttingRecipes(Identifier typeId, Identifier itemId) {
         String path = itemId.getPath();
 
@@ -193,7 +219,7 @@ public class RuntimeDataGenerator {
 
     private static void simpleWoodRecipe(Identifier typeId, TagKey<Item> inputTag, Identifier outputId, int amount) {
         if (BuiltInRegistries.ITEM.containsKey(outputId)) {
-            Recipe.CODEC.encodeStart(
+            Recipe.DIRECT_CODEC.encodeStart(
                 EmptyJsonOps.INSTANCE, new CuttingRecipe(
                     50,
                     List.of(new ProcessingOutput(BuiltInRegistries.ITEM.get(outputId).orElseThrow(), amount)),
@@ -225,7 +251,7 @@ public class RuntimeDataGenerator {
     }
 
     private static void addRecipe(Identifier typeId, String modid, String from, String to, Recipe<?> recipe) {
-        Recipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe).ifSuccess(json -> {
+        Recipe.DIRECT_CODEC.encodeStart(JsonOps.INSTANCE, recipe).ifSuccess(json -> {
             Identifier path = Identifier.fromNamespaceAndPath(
                 typeId.getNamespace(),
                 "recipe/" + typeId.getPath() + "/runtime_generated/compat/" + modid + "/" + from + "_to_" + to

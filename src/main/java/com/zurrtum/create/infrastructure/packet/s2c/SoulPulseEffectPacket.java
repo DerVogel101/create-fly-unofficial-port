@@ -24,6 +24,7 @@ public record SoulPulseEffectPacket(BlockPos pos, int distance,
 
     @Override
     public void handle(ClientGamePacketListener listener) {
+        AllClientHandle.INSTANCE.ensureMainThread(listener, this);
         AllClientHandle.INSTANCE.onSoulPulseEffect(this);
     }
 

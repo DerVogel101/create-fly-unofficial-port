@@ -5,6 +5,7 @@ import com.zurrtum.create.content.contraptions.StructureTransform;
 import com.zurrtum.create.content.schematics.requirement.ItemRequirement;
 import com.zurrtum.create.foundation.blockEntity.SmartBlockEntity;
 import com.zurrtum.create.foundation.blockEntity.behaviour.BehaviourType;
+import com.zurrtum.create.foundation.codec.CreateCodecs;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
@@ -114,7 +115,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour<SmartBlo
     @Override
     public void write(ValueOutput view, boolean clientPacket) {
         if (isBracketPresent() && isBracketValid(bracket)) {
-            view.store("Bracket", BlockState.CODEC, bracket);
+            view.store("Bracket", CreateCodecs.BLOCK_STATE, bracket);
         }
         if (clientPacket && reRender) {
             view.putBoolean("Redraw", true);
@@ -125,7 +126,7 @@ public class BracketedBlockEntityBehaviour extends BlockEntityBehaviour<SmartBlo
 
     @Override
     public void read(ValueInput view, boolean clientPacket) {
-        view.read("Bracket", BlockState.CODEC).ifPresent(state -> {
+        view.read("Bracket", CreateCodecs.BLOCK_STATE).ifPresent(state -> {
             bracket = null;
             if (isBracketValid(state)) {
                 bracket = state;

@@ -1,6 +1,7 @@
 package com.zurrtum.create.infrastructure.worldgen;
 
 import com.zurrtum.create.infrastructure.worldgen.LayerPattern.Layer;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
@@ -8,11 +9,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.BulkSectionAccess;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.AbstractOreFeature;
+import net.minecraft.world.level.levelgen.feature.BlockReplacement;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.synth.SimplexNoise;
 
 import java.util.ArrayList;
@@ -20,9 +22,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-public class LayeredOreFeature extends Feature<LayeredOreConfiguration> {
-    public LayeredOreFeature() {
-        super(LayeredOreConfiguration.CODEC);
+public class LayeredOreFeature implements Feature {
+    public static final MapCodec<LayeredOreFeature> CODEC = LayeredOreConfiguration.CODEC.xmap(
+        LayeredOreFeature::new,
+        feature -> feature.config
+    );
+
+    private final LayeredOreConfiguration config;
+
+    public LayeredOreFeature(LayeredOreConfiguration config) {
+        this.config = config;
     }
 
     private static final float MAX_LAYER_DISPLACEMENT = 1.75f;
@@ -32,11 +41,12 @@ public class LayeredOreFeature extends Feature<LayeredOreConfiguration> {
     private static final float RADIAL_NOISE_FREQUENCY = 0.125f;
 
     @Override
-    public boolean place(FeaturePlaceContext<LayeredOreConfiguration> pContext) {
-        RandomSource random = pContext.random();
-        BlockPos origin = pContext.origin();
-        WorldGenLevel worldGenLevel = pContext.level();
-        LayeredOreConfiguration config = pContext.config();
+    public MapCodec<LayeredOreFeature> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public boolean place(WorldGenLevel worldGenLevel, ChunkGenerator chunkGenerator, RandomSource random, BlockPos origin) {
         List<LayerPattern> patternPool = config.layerPatterns;
 
         if (patternPool.isEmpty()) {
@@ -89,8 +99,9 @@ public class LayeredOreFeature extends Feature<LayeredOreConfiguration> {
         float gx = Mth.cos(theta) * xzRescale;
         float gz = Mth.sin(theta) * xzRescale;
 
-        SimplexNoise layerDisplacementNoise = new SimplexNoise(random);
-        SimplexNoise radiusNoise = new SimplexNoise(random);
+        // No input offset, matching the pre-26.3 3D simplex noise
+        SimplexNoise layerDisplacementNoise = new SimplexNoise(random, true);
+        SimplexNoise radiusNoise = new SimplexNoise(random, true);
 
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
         BulkSectionAccess bulkSectionAccess = new BulkSectionAccess(worldGenLevel);
@@ -124,7 +135,7 @@ public class LayeredOreFeature extends Feature<LayeredOreConfiguration> {
                         int currentZ = z0 + dzBlock;
 
                         float rampValue = gx * dx + gy * dy + gz * dz;
-                        rampValue += layerDisplacementNoise.getValue(
+                        rampValue += layerDisplacementNoise.get(
                             currentX * LAYER_NOISE_FREQUENCY,
                             currentY * LAYER_NOISE_FREQUENCY,
                             currentZ * LAYER_NOISE_FREQUENCY
@@ -144,7 +155,7 @@ public class LayeredOreFeature extends Feature<LayeredOreConfiguration> {
                         }
 
                         float thresholdNoiseValue = Mth.map(
-                            (float) radiusNoise.getValue(
+                            radiusNoise.get(
                                 currentX * RADIAL_NOISE_FREQUENCY,
                                 currentY * RADIAL_NOISE_FREQUENCY,
                                 currentZ * RADIAL_NOISE_FREQUENCY
@@ -156,7 +167,7 @@ public class LayeredOreFeature extends Feature<LayeredOreConfiguration> {
                         }
 
                         Layer layer = layerEntry.layer;
-                        List<OreConfiguration.TargetBlockState> targetBlockStates = layer.rollBlock(random);
+                        List<BlockReplacement> targetBlockStates = layer.rollBlock(random);
 
                         mutablePos.set(currentX, currentY, currentZ);
                         if (!worldGenLevel.ensureCanWrite(mutablePos)) {
@@ -172,7 +183,7 @@ public class LayeredOreFeature extends Feature<LayeredOreConfiguration> {
                         int localZ = SectionPos.sectionRelative(currentZ);
                         BlockState blockState = levelChunkSection.getBlockState(localX, localY, localZ);
 
-                        for (OreConfiguration.TargetBlockState targetBlockState : targetBlockStates) {
+                        for (BlockReplacement targetBlockState : targetBlockStates) {
                             if (!canPlaceOre(
                                 blockState,
                                 bulkSectionAccess::getBlockState,
@@ -183,10 +194,10 @@ public class LayeredOreFeature extends Feature<LayeredOreConfiguration> {
                             )) {
                                 continue;
                             }
-                            if (targetBlockState.state.isAir()) {
+                            if (targetBlockState.state().isAir()) {
                                 continue;
                             }
-                            levelChunkSection.setBlockState(localX, localY, localZ, targetBlockState.state, false);
+                            levelChunkSection.setBlockState(localX, localY, localZ, targetBlockState.state(), false);
                             ++placedAmount;
                             break;
                         }
@@ -214,17 +225,17 @@ public class LayeredOreFeature extends Feature<LayeredOreConfiguration> {
         Function<BlockPos, BlockState> pAdjacentStateAccessor,
         RandomSource pRandom,
         LayeredOreConfiguration pConfig,
-        OreConfiguration.TargetBlockState pTargetState,
+        BlockReplacement pTargetState,
         BlockPos.MutableBlockPos pMatablePos
     ) {
-        if (!pTargetState.target.test(pState, pRandom)) {
+        if (!pTargetState.target().test(pState, pMatablePos, pRandom)) {
             return false;
         }
         if (shouldSkipAirCheck(pRandom, pConfig.discardChanceOnAirExposure)) {
             return true;
         }
 
-        return !isAdjacentToAir(pAdjacentStateAccessor, pMatablePos);
+        return !AbstractOreFeature.isAdjacentToAir(pAdjacentStateAccessor, pMatablePos);
     }
 
     protected boolean shouldSkipAirCheck(RandomSource pRandom, float pChance) {

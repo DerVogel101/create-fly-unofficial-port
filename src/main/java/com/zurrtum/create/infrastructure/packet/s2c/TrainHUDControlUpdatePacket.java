@@ -40,6 +40,7 @@ public record TrainHUDControlUpdatePacket(UUID trainId, @Nullable Double throttl
 
     @Override
     public void handle(ClientGamePacketListener listener) {
+        AllClientHandle.INSTANCE.ensureMainThread(listener, this);
         AllClientHandle.INSTANCE.onTrainHUDControlUpdate(this);
     }
 

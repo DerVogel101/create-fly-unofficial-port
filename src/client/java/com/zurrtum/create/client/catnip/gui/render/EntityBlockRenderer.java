@@ -2,9 +2,9 @@ package com.zurrtum.create.client.catnip.gui.render;
 
 import com.mojang.blaze3d.platform.Lighting.Entry;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.mojang.renderpearl.api.textures.FilterMode;
 import com.zurrtum.create.client.catnip.render.CachedBuffers;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -69,13 +69,13 @@ public class EntityBlockRenderer extends PictureInPictureRenderer<EntityBlockRen
         gameRenderer.useUiLightmap = false;
         gameRenderer.lighting().setupFor(Entry.ENTITY_IN_UI);
         if (block.zRot() != 0) {
-            matrices.mulPose(Axis.ZP.rotation(block.zRot()));
+            matrices.rotate(Axis.ZP.rotation(block.zRot()));
         }
         if (block.xRot() != 0) {
-            matrices.mulPose(Axis.XP.rotation(block.xRot()));
+            matrices.rotate(Axis.XP.rotation(block.xRot()));
         }
         if (block.yRot() != 0) {
-            matrices.mulPose(Axis.YP.rotation(block.yRot()));
+            matrices.rotate(Axis.YP.rotation(block.yRot()));
         }
         matrices.translate(-0.5F, -0.5F, -0.5F);
         Level world = block.world();
@@ -102,9 +102,8 @@ public class EntityBlockRenderer extends PictureInPictureRenderer<EntityBlockRen
             }
         }
         matrices.popPose();
-        featureRenderDispatcher.renderAllFeatures(submitNodeStorage);
+        texture.render(featureRenderDispatcher, submitNodeStorage);
         gameRenderer.useUiLightmap = lightOption;
-        texture.clear();
         state.addBlitToCurrentLayer(new BlitRenderState(
             RenderPipelines.GUI_TEXTURED_PREMULTIPLIED_ALPHA,
             TextureSetup.singleTexture(

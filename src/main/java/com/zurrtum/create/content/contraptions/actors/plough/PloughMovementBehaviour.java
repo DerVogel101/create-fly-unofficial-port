@@ -68,10 +68,11 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
             return;
         }
 
+        // off hand: 26.3's BlockTransformer reads the (null) player's off-hand item for main-hand uses
         UseOnContext ctx = new UseOnContext(
             world,
             null,
-            InteractionHand.MAIN_HAND,
+            InteractionHand.OFF_HAND,
             Items.DIAMOND_HOE.getDefaultInstance(),
             ray
         );

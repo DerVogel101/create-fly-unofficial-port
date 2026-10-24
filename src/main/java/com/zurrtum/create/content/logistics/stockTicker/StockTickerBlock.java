@@ -1,6 +1,5 @@
 package com.zurrtum.create.content.logistics.stockTicker;
 
-import com.mojang.serialization.MapCodec;
 import com.zurrtum.create.AllBlockEntityTypes;
 import com.zurrtum.create.AllShapes;
 import com.zurrtum.create.content.equipment.wrench.IWrenchable;
@@ -15,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -37,8 +37,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
 public class StockTickerBlock extends HorizontalDirectionalBlock implements IBE<StockTickerBlockEntity>, IWrenchable, ItemInventoryProvider<StockTickerBlockEntity> {
-
-    public static final MapCodec<StockTickerBlock> CODEC = simpleCodec(StockTickerBlock::new);
 
     public StockTickerBlock(Properties pProperties) {
         super(pProperties);
@@ -97,7 +95,7 @@ public class StockTickerBlock extends HorizontalDirectionalBlock implements IBE<
                             continue;
                         }
                         inventory.setItem(i, ItemStack.EMPTY);
-                        playerInventory.placeItemBackInInventory(target);
+                        playerInventory.placeItemBackInInventory(target, Prediction.SERVER_ONLY);
                         anySuccess = true;
                     }
                     if (anySuccess) {
@@ -145,10 +143,5 @@ public class StockTickerBlock extends HorizontalDirectionalBlock implements IBE<
     @Override
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 }

@@ -1,9 +1,9 @@
 package com.zurrtum.create.client.foundation.gui.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.mojang.renderpearl.api.textures.FilterMode;
 import com.zurrtum.create.client.catnip.gui.render.GpuTexture;
 import com.zurrtum.create.client.catnip.render.CachedBuffers;
 import net.minecraft.client.gui.render.TextureSetup;
@@ -50,14 +50,13 @@ public class ManualBlockRenderer extends GuiBlockRenderer<ManualBlockRenderState
         matrices.translate(size / 2.0F, size, 0.0F);
         float scale = 20 * windowScaleFactor;
         matrices.scale(scale, scale, scale);
-        matrices.mulPose(Axis.XP.rotationDegrees(-15.5f));
-        matrices.mulPose(Axis.YP.rotationDegrees(22.5f));
+        matrices.rotate(Axis.XP.rotationDegrees(-15.5f));
+        matrices.rotate(Axis.YP.rotationDegrees(22.5f));
         matrices.translate(-0.5f, -0.2f, -0.5f);
         matrices.scale(1, -1, 1);
         CachedBuffers.block(block.state()).submit(matrices, submitNodeStorage);
         matrices.popPose();
-        renderAllFeatures(featureRenderDispatcher);
-        texture.clear();
+        renderAllFeatures(featureRenderDispatcher, texture.textureView(), texture.depthTextureView());
         state.addBlitToCurrentLayer(new BlitRenderState(
             RenderPipelines.GUI_TEXTURED_PREMULTIPLIED_ALPHA,
             TextureSetup.singleTexture(

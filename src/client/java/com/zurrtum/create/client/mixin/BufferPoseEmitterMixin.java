@@ -7,6 +7,7 @@ import com.zurrtum.create.client.flywheel.lib.model.baked.FabricEmitterSupplier;
 import net.fabricmc.fabric.api.client.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,7 +23,7 @@ public interface BufferPoseEmitterMixin extends BufferEmitter, FabricEmitterSupp
         return Renderer.get().quadEmitter(quad -> quad.buffer(
             OverlayTexture.NO_OVERLAY,
             pose,
-            getBuffer(quad.diffuseShade(), quad.chunkLayer())
+            getBuffer(quad.shadeDirectionOverride() != Direction.UP, quad.chunkLayer())
         ));
     }
 }

@@ -26,6 +26,7 @@ public record ContraptionBlockChangedPacket(int entityId, BlockPos localPos,
 
     @Override
     public void handle(ClientGamePacketListener listener) {
+        AllClientHandle.INSTANCE.ensureMainThread(listener, this);
         AllClientHandle.INSTANCE.onContraptionBlockChanged(this);
     }
 

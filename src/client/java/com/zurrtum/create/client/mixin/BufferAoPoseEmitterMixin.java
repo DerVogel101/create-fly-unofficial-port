@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,7 +26,7 @@ public interface BufferAoPoseEmitterMixin extends FabricEmitterSupplier {
     default @NonNull QuadEmitter quadEmitter() {
         Pose pose = getPose();
         return Renderer.get().quadEmitter(quad -> {
-            VertexConsumer buffer = getBuffer(quad.chunkLayer(), quad.diffuseShade(), quad.ambientOcclusion().get());
+            VertexConsumer buffer = getBuffer(quad.chunkLayer(), quad.shadeDirectionOverride() != Direction.UP, quad.ambientOcclusion().get());
             if (buffer == null) {
                 return;
             }

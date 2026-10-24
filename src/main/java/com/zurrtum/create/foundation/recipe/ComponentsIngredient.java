@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -17,7 +18,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -72,17 +72,17 @@ public class ComponentsIngredient extends Ingredient {
         }
 
         // None strict matching
-        for (Map.Entry<DataComponentType<?>, Optional<?>> entry : components.entrySet()) {
-            final DataComponentType<?> type = entry.getKey();
-            final Optional<?> value = entry.getValue();
+        for (DataComponentType<?> type : components.map.keySet()) {
+            // null when the patch removes the component
+            final Object value = components.get(DataComponentMap.EMPTY, type);
 
-            if (value.isPresent()) {
+            if (value != null) {
                 // Expect the stack to contain a matching component
                 if (!stack.has(type)) {
                     return false;
                 }
 
-                if (!Objects.equals(value.get(), stack.get(type))) {
+                if (!Objects.equals(value, stack.get(type))) {
                     return false;
                 }
             } else {

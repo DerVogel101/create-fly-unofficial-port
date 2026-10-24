@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.resources.model.geometry.BakedQuad.MaterialInfo;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.UnknownNullability;
 
 public class VanillinMeshEmitterManager extends MeshEmitterManager<MeshEmitter> implements BufferAoPoseEmitter, FluidRenderer.Output {
@@ -38,7 +39,7 @@ public class VanillinMeshEmitterManager extends MeshEmitterManager<MeshEmitter> 
     @Override
     public void put(float x, float y, float z, BakedQuad quad, QuadInstance instance) {
         MaterialInfo info = quad.materialInfo();
-        BufferBuilder buffer = getBuffer(info.layer(), info.shade(), useAo);
+        BufferBuilder buffer = getBuffer(info.layer(), info.shadeDirectionOverride() != Direction.UP, useAo);
         if (buffer != null) {
             if (x != 0.0F || y != 0.0F || z != 0.0F) {
                 poseStack.pushPose();

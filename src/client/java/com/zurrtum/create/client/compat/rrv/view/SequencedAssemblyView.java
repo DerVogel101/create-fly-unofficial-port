@@ -20,6 +20,7 @@ import com.zurrtum.create.client.foundation.gui.render.DeployerRenderState;
 import com.zurrtum.create.client.foundation.gui.render.PressRenderState;
 import com.zurrtum.create.client.foundation.gui.render.SpoutRenderState;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
+import com.zurrtum.create.client.mixin.RrvRecipeViewScreenAccessor;
 import com.zurrtum.create.content.fluids.potion.PotionFluidHandler;
 import com.zurrtum.create.content.fluids.transfer.FillingRecipe;
 import com.zurrtum.create.content.kinetics.deployer.DeployerApplicationRecipe;
@@ -185,7 +186,7 @@ public class SequencedAssemblyView extends CreateView {
         int mouseY,
         float partialTicks
     ) {
-        boolean checkHover = screen.hoveredSlot == null;
+        boolean checkHover = ((RrvRecipeViewScreenAccessor) screen).create$getHoveredSlot() == null;
         boolean checkStep = mouseY >= 7 && mouseY <= 86;
         Font textRenderer = screen.getFont();
         Iterator<SlotContent> iterator = ingredients.iterator();
@@ -275,7 +276,7 @@ public class SequencedAssemblyView extends CreateView {
             } else {
                 RegistryOps<JsonElement> ops = Minecraft.getInstance().level.registryAccess()
                     .createSerializationContext(JsonOps.INSTANCE);
-                name = Recipe.CODEC.encodeStart(ops, recipe).result().map(json -> AllAssemblyRecipeNames.get(ops, json))
+                name = Recipe.DIRECT_CODEC.encodeStart(ops, recipe).result().map(json -> AllAssemblyRecipeNames.get(ops, json))
                     .orElse(CommonComponents.EMPTY);
             }
             NAMES.put(recipe, name);

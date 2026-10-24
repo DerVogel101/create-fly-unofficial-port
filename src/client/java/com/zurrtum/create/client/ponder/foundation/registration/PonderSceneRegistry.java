@@ -17,9 +17,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -170,7 +173,9 @@ public class PonderSceneRegistry implements SceneRegistryAccess {
         DataInputStream stream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(resourceStream)));
         CompoundTag nbt = NbtIo.read(stream, NbtAccounter.create(0x20000000L));
         //t.load(Minecraft.getInstance().level.holderLookup(Registries.BLOCK), nbt);
-        t.load(BuiltInRegistries.BLOCK, nbt);
+        // Upgrade like vanilla's structure loader: since 26.3 block states are stored as id/properties, older
+        // schematics (all of Ponder's) would otherwise load as air
+        t.load(BuiltInRegistries.BLOCK, DataFixTypes.STRUCTURE.updateToCurrentVersion(DataFixers.getDataFixer(), nbt, NbtUtils.getDataVersion(nbt, 500)));
         return t;
     }
 }

@@ -1,6 +1,6 @@
 package com.zurrtum.create.client;
 
-import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.renderpearl.backend.opengl.GlStateManager;
 import com.zurrtum.create.*;
 import com.zurrtum.create.AllParticleTypes;
 import com.zurrtum.create.catnip.animation.LerpedFloat;
@@ -173,6 +173,11 @@ public class AllHandle extends AllClientHandle {
         if (listener instanceof ClientPacketListener) {
             PacketUtils.ensureRunningOnSameThread(packet, listener, mc.packetProcessor());
         }
+    }
+
+    @Override
+    public void ensureMainThread(ClientGamePacketListener listener, Packet<ClientGamePacketListener> packet) {
+        forceMainThread(listener, Minecraft.getInstance(), packet);
     }
 
     @Override

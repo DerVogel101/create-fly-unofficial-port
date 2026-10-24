@@ -5,16 +5,16 @@ import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.PlayerModelPart;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -71,7 +71,7 @@ public abstract class ShootableGadgetRenderHandler {
         ItemStack heldItem,
         Minecraft mc,
         EntityRenderDispatcher entityRenderDispatcher,
-        ItemInHandRenderer firstPersonRenderer,
+        ItemStackRenderState itemRenderState,
         PoseStack ms,
         SubmitNodeCollector queue,
         int light,
@@ -85,7 +85,7 @@ public abstract class ShootableGadgetRenderHandler {
         }
 
         AbstractClientPlayer player = mc.player;
-        AvatarRenderer<AbstractClientPlayer> playerrenderer = entityRenderDispatcher.getPlayerRenderer(player);
+        AvatarRenderer<?> playerrenderer = (AvatarRenderer<?>) entityRenderDispatcher.getRenderer(player);
 
         boolean rightHand = hand == InteractionHand.MAIN_HAND ^ player.getMainArm() == HumanoidArm.LEFT;
         float recoil = rightHand ? Mth.lerp(pt, lastRightHandAnimation, rightHandAnimation) :
@@ -109,15 +109,15 @@ public abstract class ShootableGadgetRenderHandler {
 
         ms.pushPose();
         ms.translate(flip * (f2 + 0.64F - 0.1f), f3 + -0.4F + equipProgress * -0.6F, f4 + -0.72F + 0.3f + recoil);
-        ms.mulPose(Axis.YP.rotationDegrees(flip * 75.0F));
-        ms.mulPose(Axis.YP.rotationDegrees(flip * f6 * 70.0F));
-        ms.mulPose(Axis.ZP.rotationDegrees(flip * f5 * -20.0F));
+        ms.rotate(Axis.YP.rotationDegrees(flip * 75.0F));
+        ms.rotate(Axis.YP.rotationDegrees(flip * f6 * 70.0F));
+        ms.rotate(Axis.ZP.rotationDegrees(flip * f5 * -20.0F));
         ms.translate(flip * -1.0F, 3.6F, 3.5F);
-        ms.mulPose(Axis.ZP.rotationDegrees(flip * 120.0F));
-        ms.mulPose(Axis.XP.rotationDegrees(200.0F));
-        ms.mulPose(Axis.YP.rotationDegrees(flip * -135.0F));
+        ms.rotate(Axis.ZP.rotationDegrees(flip * 120.0F));
+        ms.rotate(Axis.XP.rotationDegrees(200.0F));
+        ms.rotate(Axis.YP.rotationDegrees(flip * -135.0F));
         ms.translate(flip * 5.6F, 0.0F, 0.0F);
-        ms.mulPose(Axis.YP.rotationDegrees(flip * 40.0F));
+        ms.rotate(Axis.YP.rotationDegrees(flip * 40.0F));
         transformHand(ms, flip, equipProgress, recoil, pt);
         Identifier texture = player.getSkin().body().texturePath();
         if (rightHand) {
@@ -142,17 +142,11 @@ public abstract class ShootableGadgetRenderHandler {
         // Render gadget
         ms.pushPose();
         ms.translate(flip * (f2 + 0.64F - 0.1f), f3 + -0.4F + equipProgress * -0.6F, f4 + -0.72F - 0.1f + recoil);
-        ms.mulPose(Axis.YP.rotationDegrees(flip * f6 * 70.0F));
-        ms.mulPose(Axis.ZP.rotationDegrees(flip * f5 * -20.0F));
+        ms.rotate(Axis.YP.rotationDegrees(flip * f6 * 70.0F));
+        ms.rotate(Axis.ZP.rotationDegrees(flip * f5 * -20.0F));
         transformTool(ms, flip, equipProgress, recoil, pt);
-        firstPersonRenderer.renderItem(
-            player,
-            heldItem,
-            rightHand ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND,
-            ms,
-            queue,
-            light
-        );
+        // 26.3 extracts the held item's render state up front, with the matching first person display context
+        itemRenderState.submit(ms, queue, light, OverlayTexture.NO_OVERLAY, 0);
         ms.popPose();
         return true;
     }

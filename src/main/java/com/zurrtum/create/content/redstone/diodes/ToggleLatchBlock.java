@@ -1,6 +1,5 @@
 package com.zurrtum.create.content.redstone.diodes;
 
-import com.mojang.serialization.MapCodec;
 import com.zurrtum.create.AllItems;
 import com.zurrtum.create.foundation.block.RedStoneConnectBlock;
 import net.minecraft.core.BlockPos;
@@ -27,16 +26,9 @@ public class ToggleLatchBlock extends AbstractDiodeBlock implements RedStoneConn
 
     public static BooleanProperty POWERING = BooleanProperty.create("powering");
 
-    public static final MapCodec<ToggleLatchBlock> CODEC = simpleCodec(ToggleLatchBlock::new);
-
     public ToggleLatchBlock(Properties properties) {
         super(properties);
         registerDefaultState(defaultBlockState().setValue(POWERING, false).setValue(POWERED, false));
-    }
-
-    @Override
-    protected MapCodec<? extends DiodeBlock> codec() {
-        return CODEC;
     }
 
     @Override

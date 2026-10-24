@@ -23,6 +23,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntitySpawnRequest;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.WalkAnimationState;
 import net.minecraft.world.entity.animal.sheep.Sheep;
@@ -171,7 +172,7 @@ public class DeployerScenes {
         scene.idle(70);
 
         ElementLink<EntityElement> sheep = scene.world().createEntity(w -> {
-            Sheep entity = EntityTypes.SHEEP.create(w, EntitySpawnReason.LOAD);
+            Sheep entity = EntityTypes.SHEEP.create(w, new EntitySpawnRequest(EntitySpawnReason.LOAD, true));
             entity.setColor(DyeColor.PINK);
             Vec3 p = util.vector().topOf(util.grid().at(1, 0, 2));
             entity.setPosRaw(p.x, p.y, p.z);

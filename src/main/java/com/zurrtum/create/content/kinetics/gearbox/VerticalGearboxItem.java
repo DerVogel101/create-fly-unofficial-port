@@ -3,6 +3,7 @@ package com.zurrtum.create.content.kinetics.gearbox;
 import com.zurrtum.create.AllBlocks;
 import com.zurrtum.create.catnip.data.Iterate;
 import com.zurrtum.create.content.kinetics.base.IRotate;
+import com.zurrtum.create.foundation.item.CustomBlockEntityTagItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -18,7 +19,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 
-public class VerticalGearboxItem extends BlockItem {
+public class VerticalGearboxItem extends BlockItem implements CustomBlockEntityTagItem {
 
     public VerticalGearboxItem(Properties settings) {
         super(AllBlocks.GEARBOX, settings);
@@ -29,7 +30,7 @@ public class VerticalGearboxItem extends BlockItem {
     }
 
     @Override
-    protected boolean updateCustomBlockEntityTag(
+    public boolean updateCustomBlockEntityTag(
         BlockPos pos,
         Level world,
         @Nullable Player player,
@@ -58,7 +59,7 @@ public class VerticalGearboxItem extends BlockItem {
         Axis axis = prefferedAxis == null ? player.getDirection().getClockWise().getAxis() :
             prefferedAxis == Axis.X ? Axis.Z : Axis.X;
         world.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.AXIS, axis));
-        return super.updateCustomBlockEntityTag(pos, world, player, stack, state);
+        return BlockItem.updateCustomBlockEntityTag(world, player, pos, stack);
     }
 
 }

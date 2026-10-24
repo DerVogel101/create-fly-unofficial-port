@@ -2,9 +2,9 @@ package com.zurrtum.create.client.catnip.gui.render;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.mojang.renderpearl.api.textures.FilterMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
@@ -75,13 +75,13 @@ public class ItemTransformElementRenderer extends PictureInPictureRenderer<ItemT
             }
             matrices.scale(size, -size, size);
             if (key.zRot != 0) {
-                matrices.mulPose(Axis.ZP.rotation(key.zRot));
+                matrices.rotate(Axis.ZP.rotation(key.zRot));
             }
             if (key.xRot != 0) {
-                matrices.mulPose(Axis.XP.rotation(key.xRot));
+                matrices.rotate(Axis.XP.rotation(key.xRot));
             }
             if (key.yRot != 0) {
-                matrices.mulPose(Axis.YP.rotation(key.yRot));
+                matrices.rotate(Axis.YP.rotation(key.yRot));
             }
             Lighting lighting = Minecraft.getInstance().gameRenderer.lighting();
             if (key.state.usesBlockLight()) {
@@ -91,8 +91,7 @@ public class ItemTransformElementRenderer extends PictureInPictureRenderer<ItemT
             }
             key.state.submit(matrices, submitNodeStorage, 0, OverlayTexture.NO_OVERLAY, 0);
             matrices.popPose();
-            featureRenderDispatcher.renderAllFeatures(submitNodeStorage);
-            texture.clear();
+            texture.render(featureRenderDispatcher, submitNodeStorage);
         }
         state.addBlitToCurrentLayer(new BlitRenderState(
             RenderPipelines.GUI_TEXTURED_PREMULTIPLIED_ALPHA,

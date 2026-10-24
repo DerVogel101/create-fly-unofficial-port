@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.kinetics.deployer;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.mojang.serialization.Codec;
 import com.zurrtum.create.*;
 import com.zurrtum.create.api.behaviour.BlockEntityBehaviour;
@@ -27,6 +28,7 @@ import net.minecraft.world.Clearable;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemStackWithSlot;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
@@ -73,7 +75,7 @@ public class DeployerBlockEntity extends KineticBlockEntity implements Clearable
     public enum State implements StringRepresentable {
         WAITING, EXPANDING, RETRACTING, DUMPING;
 
-        public static final Codec<State> CODEC = StringRepresentable.fromEnum(State::values);
+        public static final Codec<State> CODEC = LenientCodecs.enumOf(State::values);
 
         @Override
         public String getSerializedName() {
@@ -84,7 +86,7 @@ public class DeployerBlockEntity extends KineticBlockEntity implements Clearable
     public enum Mode implements StringRepresentable {
         PUNCH, USE;
 
-        public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
+        public static final Codec<Mode> CODEC = LenientCodecs.enumOf(Mode::values);
 
         @Override
         public String getSerializedName() {
@@ -405,7 +407,12 @@ public class DeployerBlockEntity extends KineticBlockEntity implements Clearable
         owner = view.read("Owner", UUIDUtil.CODEC).orElse(null);
         ownerName = view.read("OwnerName", Codec.STRING).orElse(null);
 
-        deferredInventoryList = view.read("Inventory", CompoundTag.CODEC).orElseGet(CompoundTag::new);
+        // Create on other loaders saves the fake player's inventory as a plain list
+        deferredInventoryList = view.read("Inventory", CompoundTag.CODEC).or(() -> view.read("Inventory", CreateCodecs.NBT_LIST_CODEC).map(list -> {
+            CompoundTag wrapped = new CompoundTag();
+            wrapped.put("Inventory", list);
+            return wrapped;
+        })).orElseGet(CompoundTag::new);
         overflowItems = new ArrayList<>();
         view.read("Overflow", CreateCodecs.ITEM_LIST_CODEC).ifPresent(overflowItems::addAll);
         view.read("HeldItem", ItemStack.OPTIONAL_CODEC).ifPresent(item -> heldItem = item);
@@ -433,7 +440,9 @@ public class DeployerBlockEntity extends KineticBlockEntity implements Clearable
         view.putBoolean("Powered", redstoneLocked);
         if (owner != null) {
             view.store("Owner", UUIDUtil.CODEC, owner);
-            view.store("OwnerName", Codec.STRING, ownerName);
+            if (ownerName != null) {
+                view.store("OwnerName", Codec.STRING, ownerName);
+            }
         }
 
         if (player != null) {
@@ -502,7 +511,12 @@ public class DeployerBlockEntity extends KineticBlockEntity implements Clearable
         }
         ServerPlayer serverPlayer = player.cast();
         serverPlayer.getInventory().dropAll();
-        overflowItems.forEach(itemstack -> serverPlayer.drop(itemstack, true, false));
+        overflowItems.forEach(itemstack -> {
+            ItemEntity entity = serverPlayer.createItemStackToDrop(itemstack, true, false);
+            if (entity != null) {
+                serverPlayer.level().addFreshEntity(entity);
+            }
+        });
         serverPlayer.discard();
         player = null;
     }

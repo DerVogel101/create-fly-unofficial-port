@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.kinetics.belt;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.mojang.serialization.Codec;
 import com.zurrtum.create.AllBlockEntityTypes;
 import com.zurrtum.create.AllBlocks;
@@ -62,7 +63,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
     public enum CasingType implements StringRepresentable {
         NONE, ANDESITE, BRASS;
 
-        public static final Codec<CasingType> CODEC = StringRepresentable.fromEnum(CasingType::values);
+        public static final Codec<CasingType> CODEC = LenientCodecs.enumOf(CasingType::values);
 
         @Override
         public String getSerializedName() {
@@ -227,7 +228,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements Clearable {
 
         if (!wasMoved) {
             if (!isController()) {
-                controller = view.read("Controller", BlockPos.CODEC).orElse(null);
+                controller = view.read("Controller", LenientCodecs.BLOCK_POS).orElse(null);
             }
             index = view.getIntOr("Index", 0);
             beltLength = view.getIntOr("Length", 0);

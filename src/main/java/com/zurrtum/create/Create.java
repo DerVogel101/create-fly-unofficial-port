@@ -126,7 +126,6 @@ public class Create implements ModInitializer {
         AllItemAttributeTypes.register();
         AllPackagePortTargetTypes.register();
         AllUnpackingHandlers.register();
-        AllFuelTimes.register();
         AllStructureProcessorTypes.register();
         CreateNBTProcessors.register();
         AllFeatures.register();

@@ -37,6 +37,7 @@ import org.apache.logging.log4j.util.TriConsumer;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -48,7 +49,8 @@ public record SequencedAssemblyRecipe(Ingredient ingredient, ItemStackTemplate t
                                       List<Recipe<?>> sequence) implements CreateRecipe<SingleRecipeInput> {
     public static final String INGREDIENT_ID = "$ingredient";
     public static final String RESULT_ID = "$result";
-    public static final Map<Identifier, Recipe<?>> GENERATE_RECIPES = new HashMap<>();
+    // Filled while recipes are decoded (in parallel since 26.3), consumed by RecipeManagerMixin once per reload
+    public static final Map<Identifier, Recipe<?>> GENERATE_RECIPES = new ConcurrentHashMap<>();
     public static final MapCodec<SequencedAssemblyRecipe> MAP_CODEC = new SequencedAssemblyRecipeMapCodec();
     public static final StreamCodec<RegistryFriendlyByteBuf, SequencedAssemblyRecipe> STREAM_CODEC = StreamCodec.composite(
         Ingredient.CONTENTS_STREAM_CODEC,
@@ -92,7 +94,7 @@ public record SequencedAssemblyRecipe(Ingredient ingredient, ItemStackTemplate t
 
     private static class SequencedAssemblyRecipeMapCodec extends MapCodec<SequencedAssemblyRecipe> {
         private static final Codec<List<ProcessingOutput>> JUNKS_CODEC = ProcessingOutput.CODEC.listOf();
-        private static final Codec<List<Recipe<?>>> RECIPE_CODEC = CODEC.listOf();
+        private static final Codec<List<Recipe<?>>> RECIPE_CODEC = Recipe.DIRECT_CODEC.listOf();
         private static final MapCodec<SequencedAssemblyRecipe> RAW_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Ingredient.CODEC.fieldOf("ingredient").forGetter(SequencedAssemblyRecipe::ingredient),
             ItemStackTemplate.CODEC.fieldOf("transitional_item").forGetter(SequencedAssemblyRecipe::transitionalItem),
@@ -139,7 +141,7 @@ public record SequencedAssemblyRecipe(Ingredient ingredient, ItemStackTemplate t
                     RecipeName.add(AllAssemblyRecipeNames.get(ops, object));
                 }
 
-                Reference2ObjectMap<DataComponentType<?>, Optional<?>> transitionalComponents = new Reference2ObjectArrayMap<>(
+                Reference2ObjectMap<DataComponentType<?>, Object> transitionalComponents = new Reference2ObjectArrayMap<>(
                     transitionalItem.components().map);
                 ItemStackTemplate transitional = new ItemStackTemplate(
                     transitionalItem.item(),
@@ -184,15 +186,15 @@ public record SequencedAssemblyRecipe(Ingredient ingredient, ItemStackTemplate t
                     }
                     transitionalComponents.put(
                         AllDataComponents.SEQUENCED_ASSEMBLY_PROGRESS,
-                        Optional.of((float) index / size)
+                        (float) index / size
                     );
-                    transitionalComponents.put(DataComponents.LORE, Optional.of(new ItemLore(lore, lore)));
+                    transitionalComponents.put(DataComponents.LORE, new ItemLore(lore, lore));
                     return ItemStackTemplate.CODEC.encodeStart(ops, transitional).getOrThrow();
                 };
                 Supplier<JsonElement> transitionalJsonChanceResult = () -> {
                     transitionalComponents.put(
                         AllDataComponents.SEQUENCED_ASSEMBLY_JUNK,
-                        Optional.of(new SequencedAssemblyJunk(result.chance(), junks))
+                        new SequencedAssemblyJunk(result.chance(), junks)
                     );
                     JsonElement element = transitionalJsonResult.get();
                     transitionalComponents.remove(AllDataComponents.SEQUENCED_ASSEMBLY_JUNK);
@@ -209,7 +211,7 @@ public record SequencedAssemblyRecipe(Ingredient ingredient, ItemStackTemplate t
                 List<Recipe<?>> sequence = new ArrayList<>(size);
                 TriConsumer<Integer, JsonElement, JsonElement> recipeAdd = (i, ingredientJson, resultJson) -> {
                     JsonObject object = sequenceJsonFactory.get(i % sequenceSize).apply(ingredientJson, resultJson);
-                    Recipe<?> recipe = CODEC.parse(ops, object).getOrThrow();
+                    Recipe<?> recipe = Recipe.DIRECT_CODEC.parse(ops, object).getOrThrow();
                     sequence.add(recipe);
                     GENERATE_RECIPES.put(id.withSuffix(String.valueOf(sequence.size())), recipe);
                 };

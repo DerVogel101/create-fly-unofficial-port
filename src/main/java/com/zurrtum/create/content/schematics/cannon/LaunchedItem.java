@@ -10,6 +10,7 @@ import com.zurrtum.create.content.kinetics.belt.BeltPart;
 import com.zurrtum.create.content.kinetics.belt.BeltSlope;
 import com.zurrtum.create.content.kinetics.belt.item.BeltConnectorItem;
 import com.zurrtum.create.content.kinetics.simpleRelays.AbstractSimpleShaftBlock;
+import com.zurrtum.create.foundation.codec.CreateCodecs;
 import com.zurrtum.create.foundation.utility.BlockHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -127,7 +128,7 @@ public abstract class LaunchedItem {
         @Override
         public void write(ValueOutput view) {
             super.write(view);
-            view.store("BlockState", BlockState.CODEC, state);
+            view.store("BlockState", CreateCodecs.BLOCK_STATE, state);
             if (data != null) {
                 data.remove("x");
                 data.remove("y");
@@ -138,7 +139,7 @@ public abstract class LaunchedItem {
         }
 
         public static @Nullable LaunchedItem from(ValueInput view, HolderGetter<Block> holderGetter) {
-            return view.read("BlockState", BlockState.CODEC).map(state -> {
+            return view.read("BlockState", CreateCodecs.BLOCK_STATE).map(state -> {
                 ForBlockState result = new ForBlockState();
                 result.read(view, holderGetter, state);
                 return result;
@@ -150,7 +151,7 @@ public abstract class LaunchedItem {
             read(
                 view,
                 holderGetter,
-                view.read("BlockState", BlockState.CODEC).orElseGet(Blocks.AIR::defaultBlockState)
+                view.read("BlockState", CreateCodecs.BLOCK_STATE).orElseGet(Blocks.AIR::defaultBlockState)
             );
         }
 

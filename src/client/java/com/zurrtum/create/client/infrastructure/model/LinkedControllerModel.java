@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.client.resources.model.sprite.TextureSlots;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -98,11 +99,11 @@ public class LinkedControllerModel implements ItemModel, SpecialModelRenderer<Re
     private final ModelRenderProperties settings;
     private final Matrix4fc transformation;
     private final Supplier<Vector3fc[]> extents;
-    private final List<BakedQuad> item;
-    private final List<BakedQuad> powered;
-    private final List<BakedQuad> torch;
-    private final List<BakedQuad> torchOff;
-    private final List<BakedQuad> button;
+    private final ItemQuads item;
+    private final ItemQuads powered;
+    private final ItemQuads torch;
+    private final ItemQuads torchOff;
+    private final ItemQuads button;
 
     public LinkedControllerModel(
         ModelRenderProperties settings,
@@ -115,12 +116,12 @@ public class LinkedControllerModel implements ItemModel, SpecialModelRenderer<Re
     ) {
         this.settings = settings;
         this.transformation = transformation;
-        this.item = item;
+        this.item = ItemQuads.split(item);
         extents = Suppliers.memoize(() -> CuboidItemModelWrapper.computeExtents(item));
-        this.powered = powered;
-        this.torch = torch;
-        this.torchOff = torchOff;
-        this.button = button;
+        this.powered = ItemQuads.split(powered);
+        this.torch = ItemQuads.split(torch);
+        this.torchOff = ItemQuads.split(torchOff);
+        this.button = ItemQuads.split(button);
     }
 
     @Override
@@ -252,8 +253,8 @@ public class LinkedControllerModel implements ItemModel, SpecialModelRenderer<Re
             int handModifier = displayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND ? -1 : 1;
             matrices.translate(0, progress / 4, progress / 4 * handModifier);
             matrices.translate(0.5f, 0.5f, 0.5f);
-            matrices.mulPose(Axis.YP.rotationDegrees(progress * -30 * handModifier));
-            matrices.mulPose(Axis.ZP.rotationDegrees(progress * -30));
+            matrices.rotate(Axis.YP.rotationDegrees(progress * -30 * handModifier));
+            matrices.rotate(Axis.ZP.rotationDegrees(progress * -30));
             matrices.translate(-0.5f, -0.5f, -0.5f);
         }
 
@@ -299,7 +300,7 @@ public class LinkedControllerModel implements ItemModel, SpecialModelRenderer<Re
         SubmitNodeCollector queue,
         int light,
         int overlay,
-        List<BakedQuad> button,
+        ItemQuads button,
         float pt,
         float b,
         int index,
@@ -320,7 +321,7 @@ public class LinkedControllerModel implements ItemModel, SpecialModelRenderer<Re
         SubmitNodeCollector queue,
         int light,
         int overlay,
-        List<BakedQuad> quads
+        ItemQuads quads
     ) {
         queue.submitItem(matrices, displayContext, light, overlay, 0, tints, quads, FoilType.NONE);
     }

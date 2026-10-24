@@ -471,7 +471,7 @@ public abstract class Contraption {
             boolean brittle = BlockMovementChecks.isBrittle(blockState);
             boolean canStick = !brittle && canStickTo(state, blockState);
             if (canStick) {
-                if (state.getPistonPushReaction() == PushReaction.PUSH_ONLY || blockState.getPistonPushReaction() == PushReaction.PUSH_ONLY) {
+                if (state.getPistonPushReaction() == PushReaction.PUSH || blockState.getPistonPushReaction() == PushReaction.PUSH) {
                     canStick = false;
                 }
                 if (BlockMovementChecks.isNotSupportive(state, offset)) {
@@ -1060,9 +1060,24 @@ public abstract class Contraption {
     ) {
         return new StructureBlockInfo(
             NBTHelper.readBlockPos(blockListEntry, "Pos"),
-            NbtUtils.readBlockState(holderGetter, blockListEntry.getCompoundOrEmpty("Block")),
+            NbtUtils.readBlockState(holderGetter, legacyBlockStateTag(blockListEntry.getCompoundOrEmpty("Block"))),
             blockListEntry.contains("Data") ? blockListEntry.getCompoundOrEmpty("Data") : null
         );
+    }
+
+    // Block states saved before 26.3 use Name/Properties; NbtUtils#readBlockState now reads id/properties
+    private static CompoundTag legacyBlockStateTag(CompoundTag tag) {
+        if (tag.contains("id") || !tag.contains("Name")) {
+            return tag;
+        }
+        CompoundTag converted = tag.copy();
+        converted.put("id", converted.get("Name"));
+        converted.remove("Name");
+        if (converted.contains("Properties")) {
+            converted.put("properties", converted.get("Properties"));
+            converted.remove("Properties");
+        }
+        return converted;
     }
 
     public void removeBlocksFromWorld(Level world, BlockPos offset) {

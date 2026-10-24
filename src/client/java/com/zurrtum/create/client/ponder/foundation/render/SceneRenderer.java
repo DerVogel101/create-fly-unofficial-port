@@ -2,11 +2,12 @@ package com.zurrtum.create.client.ponder.foundation.render;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import com.mojang.renderpearl.api.commands.RenderPass;
+import com.mojang.renderpearl.api.textures.FilterMode;
 import com.zurrtum.create.catnip.animation.LerpedFloat;
 import com.zurrtum.create.client.catnip.gui.render.GpuTexture;
 import com.zurrtum.create.client.catnip.render.PonderRenderTypes;
@@ -29,6 +30,9 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+
+import java.util.Optional;
+import java.util.OptionalDouble;
 
 public class SceneRenderer extends PictureInPictureRenderer<SceneRenderState> {
     private static final Vector3f DIFFUSE_LIGHT_0 = new Vector3f(0.4F, -1.0F, 0.7F).normalize();
@@ -79,19 +83,30 @@ public class SceneRenderer extends PictureInPictureRenderer<SceneRenderState> {
             QuadParticleFeatureRenderer.TYPE);
         Matrix4f particleTransforms = RenderSystem.getModelViewMatrixCopy().mul(matrices.last().pose());
         particle.ponder$updateTransforms(RenderSystem.getDynamicUniforms().writeTransform(particleTransforms));
-        try (FeatureRenderDispatcher.PreparedFrame frame = featureRenderDispatcher.prepareFrame(submitNodeStorage)) {
-            frame.executeSolid();
-            frame.executeTranslucent();
-            frame.executeOutline();
-            frame.executeTranslucentAfterTerrain();
-            frame.executeAlwaysOnTop();
+        try (
+            FeatureRenderDispatcher.PreparedFrame frame = featureRenderDispatcher.prepareFrame(submitNodeStorage);
+            RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
+                () -> "Ponder scene",
+                texture.textureView(),
+                Optional.empty(),
+                texture.depthTextureView(),
+                OptionalDouble.empty()
+            )
+        ) {
+            // FeatureRenderDispatcher#renderAllFeatures plus outlines
+            RenderSystem.bindDefaultUniforms(renderPass);
+            frame.executeSolid(renderPass);
+            frame.executeTranslucent(renderPass);
+            frame.executeOutline(renderPass);
+            frame.executeTranslucentAfterTerrain(renderPass);
+            frame.executeSeeThrough(renderPass);
+            frame.executeAlwaysOnTop(renderPass);
         }
         particle.ponder$updateTransforms(null);
         scene.resetParticles();
         lighting.updateLevel(mc.level.dimensionType().cardinalLightType());
         gameRenderer.useUiLightmap = lightOption;
         matrices.popPose();
-        texture.clear();
         state.addBlitToCurrentLayer(new BlitRenderState(
             RenderPipelines.GUI_TEXTURED_PREMULTIPLIED_ALPHA,
             TextureSetup.singleTexture(

@@ -1,6 +1,8 @@
 package com.zurrtum.create.client.flywheel.backend.gl;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.renderpearl.backend.opengl.GlDevice;
+import com.mojang.renderpearl.frontend.FrontendGpuDevice;
 import com.zurrtum.create.client.flywheel.backend.FlwBackend;
 import com.zurrtum.create.client.flywheel.backend.compile.core.Compilation;
 import com.zurrtum.create.client.flywheel.backend.gl.shader.GlProgram;
@@ -35,6 +37,13 @@ public final class GlCompat {
     public static final String GL_SHADING_LANGUAGE_VERSION_STRING = safeGetString(GL20C.GL_SHADING_LANGUAGE_VERSION);
 
     public static final Driver DRIVER = readVendorString();
+
+    /**
+     * The OpenGL device behind Renderpearl. Only valid while the game runs on OpenGL, see {@link #CAPABILITIES}.
+     */
+    public static GlDevice device() {
+        return (GlDevice) ((FrontendGpuDevice) RenderSystem.getDevice()).backend;
+    }
     public static final int SUBGROUP_SIZE = subgroupSize();
     public static final boolean ALLOW_DSA = true;
     public static final GlslVersion MAX_GLSL_VERSION = maxGlslVersion();

@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.contraptions.glue;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.zurrtum.create.AllBlocks;
 import com.zurrtum.create.AllEntityTypes;
 import com.zurrtum.create.AllItems;
@@ -234,8 +235,14 @@ public class SuperGlueEntity extends Entity implements SpecialEntityItemRequirem
 
     @Override
     public void readAdditionalSaveData(ValueInput view) {
-        AABB box = view.read("Box", CreateCodecs.BOX_CODEC).orElseThrow().move(position());
-        setBoundingBox(box);
+        // Create on other loaders saves the box as From/To corners
+        AABB box = view.read("Box", CreateCodecs.BOX_CODEC).or(() -> view.read("From", Vec3.CODEC)
+            .flatMap(from -> view.read("To", Vec3.CODEC).map(to -> new AABB(from, to)))).orElse(null);
+        if (box == null) {
+            discard();
+            return;
+        }
+        setBoundingBox(box.move(position()));
     }
 
     public static void writeBoundingBox(CompoundTag compound, AABB bb) {
@@ -298,7 +305,7 @@ public class SuperGlueEntity extends Entity implements SpecialEntityItemRequirem
 
     @Override
     public PushReaction getPistonPushReaction() {
-        return PushReaction.IGNORE;
+        return PushReaction.IGNORE_ENTITY;
     }
 
     public void spawnParticles() {

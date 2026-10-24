@@ -13,6 +13,7 @@ import com.zurrtum.create.client.flywheel.api.visualization.VisualManager;
 import com.zurrtum.create.client.flywheel.api.visualization.VisualizationLevel;
 import com.zurrtum.create.client.flywheel.api.visualization.VisualizationManager;
 import com.zurrtum.create.client.flywheel.backend.engine.EngineImpl;
+import com.zurrtum.create.client.flywheel.backend.engine.PassSafeTextures;
 import com.zurrtum.create.client.flywheel.impl.FlwConfig;
 import com.zurrtum.create.client.flywheel.impl.task.Flag;
 import com.zurrtum.create.client.flywheel.impl.task.FlwTaskExecutor;
@@ -259,6 +260,9 @@ public class VisualizationManagerImpl implements VisualizationManager {
      * Begin execution of the frame plan.
      */
     private void beginFrame(RenderContext context) {
+        // Called before the level render passes open, so textures can be uploaded here
+        PassSafeTextures.loadPending();
+
         // Make sure we're done with the last tick.
         // Note we don't lower here because many frames may happen per tick.
         taskExecutor.syncUntil(tickFlag::isRaised);

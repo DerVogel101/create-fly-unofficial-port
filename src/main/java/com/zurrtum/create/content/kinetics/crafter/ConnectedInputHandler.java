@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.kinetics.crafter;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.zurrtum.create.AllBlocks;
 import com.zurrtum.create.catnip.data.Iterate;
 import com.zurrtum.create.content.kinetics.crafter.MechanicalCrafterBlockEntity.CrafterItemHandler;
@@ -226,7 +227,7 @@ public class ConnectedInputHandler {
         public void read(ValueInput view) {
             isController = view.getBooleanOr("Controller", false);
             data.clear();
-            view.read("Data", CreateCodecs.BLOCK_POS_LIST_CODEC).ifPresent(data::addAll);
+            view.read("Data", LenientCodecs.BLOCK_POS_LIST).ifPresent(data::addAll);
 
             // nbt got wiped -> reset
             if (data.isEmpty()) {

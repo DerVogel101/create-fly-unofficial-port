@@ -9,11 +9,13 @@ import com.zurrtum.create.client.flywheel.impl.FlwCommands;
 import com.zurrtum.create.client.infrastructure.command.AllCommands;
 import com.zurrtum.create.client.infrastructure.command.ClientCommand;
 import com.zurrtum.create.client.ponder.command.PonderCommands;
+import com.zurrtum.create.content.trains.entity.CarriageContraptionEntity;
 import com.zurrtum.create.foundation.blockEntity.SyncedBlockEntity;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.ClientSuggestionProvider;
 import net.minecraft.network.chat.SignableCommand;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.ValueInput;
 import org.objectweb.asm.Opcodes;
@@ -62,5 +64,15 @@ public class ClientPacketListenerMixin {
         } else {
             original.call(blockEntity, input);
         }
+    }
+
+    // A vanilla vehicle correction must never snap a carriage (Create positions carriages itself); this also stops
+    // the ServerboundMoveVehiclePacket echo that would trigger the next correction.
+    @WrapOperation(method = "handleMoveVehicle(Lnet/minecraft/network/protocol/game/ClientboundMoveVehiclePacket;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isLocalInstanceAuthoritative()Z"))
+    private boolean create$ignoreCarriageVehicleCorrection(Entity vehicle, Operation<Boolean> original) {
+        if (vehicle instanceof CarriageContraptionEntity) {
+            return false;
+        }
+        return original.call(vehicle);
     }
 }

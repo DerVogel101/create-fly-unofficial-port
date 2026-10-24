@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.kinetics.mechanicalArm;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.zurrtum.create.api.registry.CreateRegistries;
@@ -259,7 +260,7 @@ public class ArmInteractionPoint {
     public enum Mode implements StringRepresentable {
         DEPOSIT("create.mechanical_arm.deposit_to", 0xDDC166), TAKE("create.mechanical_arm.extract_from", 0x7FCDE0);
 
-        public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
+        public static final Codec<Mode> CODEC = LenientCodecs.enumOf(Mode::values);
         public static final StreamCodec<ByteBuf, Mode> PACKET_CODEC = CatnipStreamCodecBuilders.ofEnum(Mode.class);
         private final String translationKey;
         private final int color;

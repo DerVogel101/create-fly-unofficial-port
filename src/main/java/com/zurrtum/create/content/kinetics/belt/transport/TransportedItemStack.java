@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.kinetics.belt.transport;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.zurrtum.create.api.registry.CreateRegistries;
@@ -25,7 +26,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
         Codec.FLOAT.fieldOf("PrevOffset").forGetter(i -> i.prevSideOffset),
         Codec.INT.fieldOf("InSegment").forGetter(i -> i.insertedAt),
         Codec.INT.fieldOf("Angle").forGetter(i -> i.angle),
-        Direction.CODEC.fieldOf("InDirection").forGetter(i -> i.insertedFrom),
+        LenientCodecs.DIRECTION.fieldOf("InDirection").forGetter(i -> i.insertedFrom),
         CreateRegistries.FAN_PROCESSING_TYPE.byNameCodec().optionalFieldOf("FanProcessingType")
             .forGetter(i -> Optional.ofNullable(i.processedBy)),
         Codec.INT.optionalFieldOf("FanProcessingTime", 0).forGetter(i -> i.processingTime),

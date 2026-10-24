@@ -334,7 +334,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
         int selected = scrollMode ? scrollSlot : hoveredSlot;
         int button = click.button();
 
-        if (button == 0) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT) {
             if (selected == DEPOSIT) {
                 onClose();
                 ToolboxHandlerClient.COOLDOWN = 2;
@@ -356,7 +356,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
             }
         }
 
-        if (button == 1) {
+        if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (state == State.SELECT_ITEM && toolboxes.size() > 1) {
                 state = State.SELECT_BOX;
                 return true;

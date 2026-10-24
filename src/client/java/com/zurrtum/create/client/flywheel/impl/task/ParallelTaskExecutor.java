@@ -192,6 +192,8 @@ public class ParallelTaskExecutor implements TaskExecutorImpl {
 
         public WorkerThread(String name) {
             super(name);
+            // Must not keep the JVM alive after the game closes, or 26.3's post-main shutdown watchdog crashes
+            setDaemon(true);
         }
 
         @Override

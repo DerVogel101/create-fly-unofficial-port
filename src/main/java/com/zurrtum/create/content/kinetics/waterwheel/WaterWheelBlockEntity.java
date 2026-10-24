@@ -9,6 +9,7 @@ import com.zurrtum.create.catnip.math.VecHelper;
 import com.zurrtum.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.zurrtum.create.content.kinetics.base.IRotate;
 import com.zurrtum.create.foundation.advancement.CreateTrigger;
+import com.zurrtum.create.foundation.codec.CreateCodecs;
 import com.zurrtum.create.foundation.fluid.FluidHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -207,7 +208,7 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
         flowScore = view.getIntOr("FlowScore", 0);
 
         BlockState prevMaterial = material;
-        Optional<BlockState> material = view.read("Material", BlockState.CODEC);
+        Optional<BlockState> material = view.read("Material", CreateCodecs.BLOCK_STATE);
         if (material.isEmpty()) {
             return;
         }
@@ -225,14 +226,14 @@ public class WaterWheelBlockEntity extends GeneratingKineticBlockEntity {
     @Override
     public void writeSafe(ValueOutput view) {
         super.writeSafe(view);
-        view.store("Material", BlockState.CODEC, material);
+        view.store("Material", CreateCodecs.BLOCK_STATE, material);
     }
 
     @Override
     public void write(ValueOutput view, boolean clientPacket) {
         super.write(view, clientPacket);
         view.putInt("FlowScore", flowScore);
-        view.store("Material", BlockState.CODEC, material);
+        view.store("Material", CreateCodecs.BLOCK_STATE, material);
     }
 
     @Override

@@ -6,11 +6,16 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.zurrtum.create.content.equipment.symmetryWand.SymmetryPlacementContext;
+import com.zurrtum.create.foundation.item.CustomBlockEntityTagItem;
 import com.zurrtum.create.foundation.item.ItemPlacementSoundContext;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,6 +29,21 @@ public class BlockItemMixin {
             return placementContext;
         }
         return original.call(context);
+    }
+
+    @WrapOperation(method = "place(Lnet/minecraft/world/item/context/BlockPlaceContext;)Lnet/minecraft/world/InteractionResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/BlockItem;updateCustomBlockEntityTag(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)Z"))
+    private boolean updateCustomBlockEntityTag(
+        Level level,
+        Player player,
+        BlockPos pos,
+        ItemStack stack,
+        Operation<Boolean> original,
+        @Local(ordinal = 1) BlockState placedState
+    ) {
+        if (this instanceof CustomBlockEntityTagItem item) {
+            return item.updateCustomBlockEntityTag(pos, level, player, stack, placedState);
+        }
+        return original.call(level, player, pos, stack);
     }
 
     @WrapOperation(method = "place(Lnet/minecraft/world/item/context/BlockPlaceContext;)Lnet/minecraft/world/InteractionResult;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getSoundType()Lnet/minecraft/world/level/block/SoundType;"))

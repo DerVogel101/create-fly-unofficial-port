@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.processing.basin;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.zurrtum.create.infrastructure.items.ItemInventory;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
@@ -89,6 +90,18 @@ public class BasinInventory implements ItemInventory {
     }
 
     public void read(ValueInput view) {
+        // Create on other loaders: InputItems / OutputItems as {Size, Items}
+        if (view.child("Inventory").isEmpty() && (view.child("InputItems").isPresent() || view.child("OutputItems").isPresent())) {
+            java.util.List<ItemStack> input = net.minecraft.core.NonNullList.withSize(9, ItemStack.EMPTY);
+            java.util.List<ItemStack> output = net.minecraft.core.NonNullList.withSize(9, ItemStack.EMPTY);
+            LenientCodecs.readSlotted(view, "InputItems", input);
+            LenientCodecs.readSlotted(view, "OutputItems", output);
+            for (int i = 0; i < 9; i++) {
+                stacks.set(i, input.get(i));
+                stacks.set(9 + i, output.get(i));
+            }
+            return;
+        }
         view.child("Inventory").ifPresentOrElse(
             inventory -> {
                 List<ItemStack> list = inventory.listOrEmpty("Input", ItemStack.CODEC).stream().toList();

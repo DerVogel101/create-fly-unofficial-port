@@ -10,6 +10,7 @@ import com.zurrtum.create.infrastructure.config.AllConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -45,7 +46,7 @@ public class MetalLadderBlock extends LadderBlock implements IWrenchable {
     @Override
     public boolean skipRendering(BlockState pState, BlockState pAdjacentBlockState, Direction pDirection) {
         if (pDirection != null && pDirection.getAxis().isHorizontal()) {
-            return pAdjacentBlockState.isAir() || !pAdjacentBlockState.blocksMotion();
+            return pAdjacentBlockState.isAir() || !pAdjacentBlockState.is(BlockTags.BLOCKS_MOTION);
         }
         return pDirection == Direction.UP && pAdjacentBlockState.getBlock() instanceof LadderBlock;
     }

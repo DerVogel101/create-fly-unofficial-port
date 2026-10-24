@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
@@ -39,11 +40,10 @@ public abstract class HumanoidArmorLayerMixin<S extends HumanoidRenderState, M e
             layer.model = model;
             layer.state = state;
             layer.light = lightCoords;
-            submitNodeCollector.order(0)
-                .submitCustomGeometry(poseStack, RenderTypes.armorCutoutNoCull(item.getLayerTexture()), layer);
-            if (itemStack.hasFoil()) {
-                submitNodeCollector.order(1).submitCustomGeometry(poseStack, RenderTypes.armorEntityGlint(), layer);
-            }
+            // 26.3 draws the glint in the same pass as the armor texture, like EquipmentLayerRenderer
+            RenderType renderType = itemStack.hasFoil() ? RenderTypes.armorCutoutNoCullGlint(item.getLayerTexture()) : RenderTypes.armorCutoutNoCull(
+                item.getLayerTexture());
+            submitNodeCollector.order(0).submitCustomGeometry(poseStack, renderType, layer);
         }
     }
 }

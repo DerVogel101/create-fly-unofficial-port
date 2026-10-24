@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.kinetics.mechanicalArm;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.zurrtum.create.AllAdvancements;
@@ -78,7 +79,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements TransformableB
     public enum Phase implements StringRepresentable {
         SEARCH_INPUTS, MOVE_TO_INPUT, SEARCH_OUTPUTS, MOVE_TO_OUTPUT, DANCING;
 
-        public static final Codec<Phase> CODEC = StringRepresentable.fromEnum(Phase::values);
+        public static final Codec<Phase> CODEC = LenientCodecs.enumOf(Phase::values);
 
         @Override
         public String getSerializedName() {

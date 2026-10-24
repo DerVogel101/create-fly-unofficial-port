@@ -25,6 +25,7 @@ import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.commands.arguments.coordinates.Coordinates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 
 public final class FlwCommands {
     private FlwCommands() {
@@ -164,9 +165,7 @@ public final class FlwCommands {
                         null,
                         null,
                         null,
-                        null,
-                        null,
-                        null
+                        (Entity) null
                     ));
                     int value = IntegerArgumentType.getInteger(context, "stage");
 

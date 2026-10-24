@@ -17,6 +17,7 @@ public record ServerSpeedPacket(int speed) implements Packet<ClientGamePacketLis
 
     @Override
     public void handle(ClientGamePacketListener listener) {
+        AllClientHandle.INSTANCE.ensureMainThread(listener, this);
         AllClientHandle.INSTANCE.onServerSpeed(this);
     }
 

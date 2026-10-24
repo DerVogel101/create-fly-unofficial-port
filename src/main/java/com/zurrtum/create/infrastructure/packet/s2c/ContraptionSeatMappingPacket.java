@@ -36,6 +36,7 @@ public record ContraptionSeatMappingPacket(int entityId, Map<UUID, Integer> mapp
 
     @Override
     public void handle(ClientGamePacketListener listener) {
+        AllClientHandle.INSTANCE.ensureMainThread(listener, this);
         AllClientHandle.INSTANCE.onContraptionSeatMapping(this);
     }
 

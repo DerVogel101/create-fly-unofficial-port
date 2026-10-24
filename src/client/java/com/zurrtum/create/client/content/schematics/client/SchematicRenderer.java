@@ -3,7 +3,7 @@ package com.zurrtum.create.client.content.schematics.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.zurrtum.create.client.catnip.animation.AnimationTickHolder;
 import com.zurrtum.create.client.catnip.levelWrappers.SchematicRenderLevel;
-import com.zurrtum.create.client.catnip.render.EntityBlockSbbBuilder;
+import com.zurrtum.create.client.catnip.render.EntityBlockLevelSbbBuilder;
 import com.zurrtum.create.client.catnip.render.SuperByteBuffer;
 import com.zurrtum.create.client.catnip.render.SuperByteBufferRenderState;
 import com.zurrtum.create.client.flywheel.api.visualization.VisualizationManager;
@@ -15,12 +15,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockModelLighter;
 import net.minecraft.client.renderer.block.BlockStateModelSet;
+import net.minecraft.client.renderer.block.FluidRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import org.jspecify.annotations.Nullable;
 
@@ -102,7 +104,8 @@ public class SchematicRenderer {
         MutableBlockPos mutableBlockPos = objects.mutableBlockPos;
         BoundingBox bounds = schematic.getBounds();
 
-        EntityBlockSbbBuilder sbbBuilder = objects.sbbBuilder;
+        EntityBlockLevelSbbBuilder sbbBuilder = objects.sbbBuilder;
+        FluidRenderer fluidRenderer = new FluidRenderer(mc.getModelManager().getFluidStateModelSet());
         schematic.renderMode = true;
         ModelConsumer renderer = ModelRenderHelper.getCullHelper(sbbBuilder);
         BlockModelLighter.enableCaching();
@@ -116,6 +119,12 @@ public class SchematicRenderer {
         )) {
             BlockPos pos = mutableBlockPos.setWithOffset(localPos, anchor);
             BlockState state = schematic.getBlockState(pos);
+            // water/lava (and waterlogged blocks) in the preview, like Ponder scenes draw them
+            FluidState fluidState = state.getFluidState();
+            if (!fluidState.isEmpty()) {
+                sbbBuilder.prepareForFluid(pos);
+                fluidRenderer.tesselate(schematic, pos, sbbBuilder, state, fluidState);
+            }
             if (state.getRenderShape() == RenderShape.MODEL) {
                 renderer.tesselateBlock(
                     pos.getX(),
@@ -138,7 +147,7 @@ public class SchematicRenderer {
 
     private static class ThreadLocalObjects {
         public final MutableBlockPos mutableBlockPos = new MutableBlockPos();
-        public final EntityBlockSbbBuilder sbbBuilder = new EntityBlockSbbBuilder();
+        public final EntityBlockLevelSbbBuilder sbbBuilder = new EntityBlockLevelSbbBuilder();
     }
 
 }

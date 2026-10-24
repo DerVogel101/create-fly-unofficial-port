@@ -4,6 +4,8 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.mojang.renderpearl.api.commands.RenderPass;
+import com.mojang.renderpearl.api.textures.GpuTextureView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
@@ -13,6 +15,9 @@ import net.minecraft.world.level.CardinalLighting;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
+
+import java.util.Optional;
+import java.util.OptionalDouble;
 
 public abstract class GuiBlockRenderer<T extends PictureInPictureRenderState> extends PictureInPictureRenderer<T> {
     private static final Vector3fc DIFFUSE_LIGHT_0 = new Vector3f(0, 0, 1).rotate(Axis.YP.rotationDegrees(12.5f))
@@ -34,8 +39,6 @@ public abstract class GuiBlockRenderer<T extends PictureInPictureRenderState> ex
             blitTexture(renderState, guiRenderState);
         } else {
             prepareTexturesAndProjection(needsAResize, width, height);
-            RenderSystem.outputColorTextureOverride = textureView;
-            RenderSystem.outputDepthTextureOverride = depthTextureView;
             Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
             modelViewStack.pushMatrix();
             PoseStack poseStack = new PoseStack();
@@ -45,18 +48,31 @@ public abstract class GuiBlockRenderer<T extends PictureInPictureRenderState> ex
             renderToTexture(renderState, poseStack, submitNodeStorage);
             renderAllFeatures(featureRenderDispatcher);
             modelViewStack.popMatrix();
-            RenderSystem.outputColorTextureOverride = null;
-            RenderSystem.outputDepthTextureOverride = null;
             blitTexture(renderState, guiRenderState);
         }
     }
 
     protected void renderAllFeatures(FeatureRenderDispatcher featureRenderDispatcher) {
+        renderAllFeatures(featureRenderDispatcher, textureView, depthTextureView);
+    }
+
+    protected void renderAllFeatures(
+        FeatureRenderDispatcher featureRenderDispatcher,
+        GpuTextureView colorTarget,
+        GpuTextureView depthTarget
+    ) {
         Minecraft mc = Minecraft.getInstance();
         Lighting lighting = mc.gameRenderer.lighting();
         lighting.updateBuffer(Lighting.Entry.LEVEL, getLight0(), getLight1());
         lighting.setupFor(Lighting.Entry.LEVEL);
-        featureRenderDispatcher.renderAllFeatures(submitNodeStorage);
+        try (
+            FeatureRenderDispatcher.PreparedFrame frame = featureRenderDispatcher.prepareFrame(submitNodeStorage);
+            RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder()
+                .createRenderPass(() -> "Create GUI block", colorTarget, Optional.empty(), depthTarget, OptionalDouble.empty())
+        ) {
+            RenderSystem.bindDefaultUniforms(renderPass);
+            FeatureRenderDispatcher.renderAllFeatures(renderPass, frame);
+        }
         if (mc.level != null) {
             lighting.updateLevel(mc.level.dimensionType().cardinalLightType());
         } else {

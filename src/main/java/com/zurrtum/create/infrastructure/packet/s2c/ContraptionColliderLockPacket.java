@@ -23,6 +23,7 @@ public record ContraptionColliderLockPacket(int contraption, double offset,
 
     @Override
     public void handle(ClientGamePacketListener listener) {
+        AllClientHandle.INSTANCE.ensureMainThread(listener, this);
         AllClientHandle.INSTANCE.onContraptionColliderLock(this);
     }
 

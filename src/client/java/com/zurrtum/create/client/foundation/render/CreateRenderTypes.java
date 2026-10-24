@@ -1,9 +1,9 @@
 package com.zurrtum.create.client.foundation.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.AddressMode;
-import com.mojang.blaze3d.textures.FilterMode;
-import com.mojang.blaze3d.textures.GpuSampler;
+import com.mojang.renderpearl.api.textures.AddressMode;
+import com.mojang.renderpearl.api.textures.FilterMode;
+import com.mojang.renderpearl.api.textures.GpuSampler;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderSetup.OutlineProperty;
@@ -32,7 +32,7 @@ public class CreateRenderTypes {
                     true
                 )
             ).useLightmap().affectsCrumbling().setOutline(OutlineProperty.AFFECTS_OUTLINE).sortOnUpload()
-            .createRenderSetup()
+            .setOitPipelines(RenderPipelines.OIT_TRANSLUCENT_BLOCK).createRenderSetup()
     );
 
     private static final RenderType ADDITIVE = RenderType.create(
@@ -87,7 +87,7 @@ public class CreateRenderTypes {
 
     private static RenderType getTrainMap(Identifier locationIn, boolean linearFiltering) {
         return RenderType.create(
-            "create_train_map", RenderSetup.builder(RenderPipelines.TEXT).sortOnUpload().useLightmap().withTexture(
+            "create_train_map", RenderSetup.builder(RenderPipelines.TEXT).setOitPipelines(RenderPipelines.OIT_TEXT).sortOnUpload().useLightmap().withTexture(
                 "Sampler0",
                 locationIn,
                 () -> RenderSystem.getSamplerCache()

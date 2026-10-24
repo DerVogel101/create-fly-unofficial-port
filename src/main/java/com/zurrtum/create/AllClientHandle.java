@@ -41,6 +41,10 @@ import org.jspecify.annotations.Nullable;
 import java.util.UUID;
 
 public class AllClientHandle {
+    // custom packets are handled on the network thread: handlers that touch game state hop to the main thread first
+    public void ensureMainThread(ClientGamePacketListener listener, Packet<ClientGamePacketListener> packet) {
+    }
+
     public static AllClientHandle INSTANCE = new AllClientHandle();
 
     private static void warn() {

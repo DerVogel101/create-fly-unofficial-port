@@ -68,7 +68,18 @@ public class CreateCodecs {
     public static final Codec<List<ItemStack>> ITEM_LIST_CODEC = ItemStack.OPTIONAL_CODEC.listOf();
     public static final Codec<List<FluidStack>> FLUID_LIST_CODEC = FluidStack.OPTIONAL_CODEC.listOf();
     public static final Codec<List<Direction>> DIRECTION_LIST_CODEC = Direction.CODEC.listOf();
-    public static final Codec<List<BlockState>> BLOCK_STATE_LIST_CODEC = BlockState.CODEC.listOf();
+    /**
+     * {@link BlockState#CODEC} that also reads block states saved before 26.3, which used Name/Properties instead of
+     * id/properties. Always writes the 26.3 format. Create's own saved data isn't upgraded by vanilla's data fixers.
+     */
+    public static final Codec<BlockState> BLOCK_STATE = Codec.withAlternative(
+        BlockState.CODEC,
+        Codec.PASSTHROUGH.flatXmap(
+            dynamic -> BlockState.CODEC.parse(dynamic.renameField("Name", "id").renameField("Properties", "properties")),
+            state -> DataResult.error(() -> "Legacy block state format is read-only")
+        )
+    );
+    public static final Codec<List<BlockState>> BLOCK_STATE_LIST_CODEC = BLOCK_STATE.listOf();
     public static final Codec<List<BlockPos>> BLOCK_POS_LIST_CODEC = BlockPos.CODEC.listOf();
     public static final Codec<Set<BlockPos>> BLOCKPOS_SET_CODEC = BlockPos.CODEC.listOf()
         .xmap(ImmutableSet::copyOf, ImmutableList::copyOf);
@@ -106,17 +117,23 @@ public class CreateCodecs {
         return new Codec<>() {
             @Override
             public <T> DataResult<com.mojang.datafixers.util.Pair<Map<K, V>, T>> decode(DynamicOps<T> ops, T input) {
-                MapLike<T> map = ops.getMap(input).getOrThrow();
-                Iterator<T> keys = ops.getStream(map.get("Keys")).getOrThrow().iterator();
-                Iterator<T> values = ops.getStream(map.get("Values")).getOrThrow().iterator();
-                HashMap<K, V> result = new HashMap<>();
-                while (keys.hasNext()) {
-                    result.put(
-                        keyCodec.parse(ops, keys.next()).getOrThrow(),
-                        valueCodec.parse(ops, values.next()).getOrThrow()
-                    );
+                // report data in another format (e.g. saved by Create on another loader) as an error instead of throwing,
+                // so callers can fall back to defaults rather than aborting the whole block entity / schematic load
+                try {
+                    MapLike<T> map = ops.getMap(input).getOrThrow();
+                    Iterator<T> keys = ops.getStream(map.get("Keys")).getOrThrow().iterator();
+                    Iterator<T> values = ops.getStream(map.get("Values")).getOrThrow().iterator();
+                    HashMap<K, V> result = new HashMap<>();
+                    while (keys.hasNext() && values.hasNext()) {
+                        result.put(
+                            keyCodec.parse(ops, keys.next()).getOrThrow(),
+                            valueCodec.parse(ops, values.next()).getOrThrow()
+                        );
+                    }
+                    return DataResult.success(com.mojang.datafixers.util.Pair.of(result, ops.empty()));
+                } catch (RuntimeException e) {
+                    return DataResult.error(() -> "Not a Keys/Values map: " + e.getMessage());
                 }
-                return DataResult.success(com.mojang.datafixers.util.Pair.of(result, ops.empty()));
             }
 
             @Override

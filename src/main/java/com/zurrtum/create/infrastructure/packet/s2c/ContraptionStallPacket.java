@@ -27,6 +27,7 @@ public record ContraptionStallPacket(int entityId, double x, double y, double z,
 
     @Override
     public void handle(ClientGamePacketListener listener) {
+        AllClientHandle.INSTANCE.ensureMainThread(listener, this);
         AllClientHandle.INSTANCE.onContraptionStall(this);
     }
 

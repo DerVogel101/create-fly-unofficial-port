@@ -17,6 +17,7 @@ public record HighlightPacket(BlockPos pos) implements Packet<ClientGamePacketLi
 
     @Override
     public void handle(ClientGamePacketListener listener) {
+        AllClientHandle.INSTANCE.ensureMainThread(listener, this);
         AllClientHandle.INSTANCE.onHighlight(this);
     }
 

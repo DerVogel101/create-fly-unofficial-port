@@ -1,7 +1,7 @@
 package com.zurrtum.create.client.flywheel.backend.gl;
 
-import com.mojang.blaze3d.opengl.GlConst;
-import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.renderpearl.backend.opengl.GlConst;
+import com.mojang.renderpearl.backend.opengl.GlStateManager;
 import com.zurrtum.create.client.flywheel.backend.gl.buffer.GlBufferType;
 
 /**
@@ -37,7 +37,14 @@ public class GlStateTracker {
     }
 
     public static State getRestoreState() {
-        return new State(BUFFERS.clone(), vao, program, GlStateManager.activeTexture + GlConst.GL_TEXTURE0);
+        return new State(
+            BUFFERS.clone(),
+            vao,
+            program,
+            GlStateManager.activeTexture + GlConst.GL_TEXTURE0,
+            GlStateManager.getFrameBuffer(GlConst.GL_READ_FRAMEBUFFER),
+            GlStateManager.getFrameBuffer(GlConst.GL_DRAW_FRAMEBUFFER)
+        );
     }
 
     public static void bindVao(int vao) {
@@ -52,7 +59,9 @@ public class GlStateTracker {
         }
     }
 
-    public record State(int[] buffers, int vao, int program, int activeTexture) implements AutoCloseable {
+    public record State(
+        int[] buffers, int vao, int program, int activeTexture, int readFramebuffer, int drawFramebuffer
+    ) implements AutoCloseable {
         public void restore() {
             if (vao != GlStateTracker.vao) {
                 GlStateManager._glBindVertexArray(vao);
@@ -71,6 +80,11 @@ public class GlStateTracker {
             }
 
             GlStateManager._activeTexture(activeTexture);
+
+            // Flywheel may draw inside a Renderpearl render pass, which binds its framebuffer only once.
+            GlStateManager._glBindFramebuffer(GlConst.GL_READ_FRAMEBUFFER, readFramebuffer);
+            GlStateManager._glBindFramebuffer(GlConst.GL_DRAW_FRAMEBUFFER, drawFramebuffer);
+            RenderpearlGlState.invalidatePipelineCache();
         }
 
         @Override

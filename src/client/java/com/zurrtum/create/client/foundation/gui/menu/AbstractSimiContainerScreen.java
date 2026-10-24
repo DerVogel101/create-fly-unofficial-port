@@ -1,5 +1,6 @@
 package com.zurrtum.create.client.foundation.gui.menu;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.zurrtum.create.client.catnip.animation.AnimationTickHolder;
 import com.zurrtum.create.client.catnip.gui.TickableGuiEventListener;
 import com.zurrtum.create.client.catnip.gui.widget.AbstractSimiWidget;
@@ -26,7 +27,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -170,7 +170,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 
     @Override
     public boolean keyPressed(KeyEvent input) {
-        if (getFocused() instanceof EditBox && input.key() != GLFW.GLFW_KEY_ESCAPE) {
+        if (getFocused() instanceof EditBox && input.key() != InputConstants.KEY_ESCAPE) {
             return getFocused().keyPressed(input);
         }
         return super.keyPressed(input);

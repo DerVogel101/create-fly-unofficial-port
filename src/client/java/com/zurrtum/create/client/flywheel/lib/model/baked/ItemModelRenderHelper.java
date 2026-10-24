@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.resources.model.cuboid.ItemTransform;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
@@ -35,7 +36,7 @@ public class ItemModelRenderHelper {
     ) {
         LayerRenderState layer = state.newLayer();
         settings.applyToLayer(layer, displayContext);
-        layer.prepareQuadList().addAll(quads);
+        layer.setQuads(ItemQuads.split(quads));
         return layer;
     }
 
@@ -70,9 +71,9 @@ public class ItemModelRenderHelper {
         return layer;
     }
 
-    private record CustomLayer(int light, int[] tints, List<BakedQuad> quads) implements SpecialModelRenderer<Object> {
+    private record CustomLayer(int light, int[] tints, ItemQuads quads) implements SpecialModelRenderer<Object> {
         public static void setup(LayerRenderState layer, int lightCoords, int[] tints, List<BakedQuad> quads) {
-            CustomLayer renderer = new CustomLayer(lightCoords, tints, quads);
+            CustomLayer renderer = new CustomLayer(lightCoords, tints, ItemQuads.split(quads));
             layer.setupSpecialModel(renderer, null);
         }
 

@@ -1,3 +1,14 @@
+> [!NOTE]
+> **Unofficial Minecraft 26.3 port.** This branch ports [Create Fly](https://github.com/ZurrTum/Create-Fly) (ZurrTum's
+> Fabric port of [Create](https://github.com/Creators-of-Create/Create)) from Minecraft 26.2 to 26.3, with bug fixes.
+> It is not made or supported by the Create or Create Fly teams — please report problems with this build on its
+> [CurseForge page](https://www.curseforge.com/minecraft/mc-mods/create-fly-unofficial-port), not upstream.
+>
+> - Download: https://www.curseforge.com/minecraft/mc-mods/create-fly-unofficial-port
+> - Build: JDK 25, `./gradlew build` (the jar ends up in `build/libs`)
+> - License: same as upstream (see `LICENSE` and the `licenses` folder); all credit for Create and Create Fly goes to
+>   their authors.
+
 <div align="center">
 
 # Create Fly

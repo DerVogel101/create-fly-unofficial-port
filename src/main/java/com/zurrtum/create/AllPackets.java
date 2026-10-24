@@ -104,6 +104,7 @@ public class AllPackets {
         "configure_symmetry_wand",
         ConfigureSymmetryWandPacket.CODEC
     );
+    public static final PacketType<SwingHandPacket> SWING_HAND = c2s("swing_hand", SwingHandPacket.CODEC);
     public static final PacketType<ConfigureWorldshaperPacket> CONFIGURE_WORLDSHAPER = c2s(
         "configure_worldshaper",
         ConfigureWorldshaperPacket.CODEC

@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.kinetics.base;
 
+import com.zurrtum.create.foundation.codec.LenientCodecs;
 import com.zurrtum.create.AllBlockEntityTypes;
 import com.zurrtum.create.AllClientHandle;
 import com.zurrtum.create.Create;
@@ -285,7 +286,7 @@ public class KineticBlockEntity extends SmartBlockEntity {
         speed = view.getFloatOr("Speed", 0);
         sequenceContext = view.read("Sequence", SequenceContext.CODEC).orElse(null);
 
-        source = view.read("Source", BlockPos.CODEC).orElse(null);
+        source = view.read("Source", LenientCodecs.BLOCK_POS).orElse(null);
 
         view.child("Network").ifPresent(networkTag -> {
             network = networkTag.getLongOr("Id", 0);

@@ -8,6 +8,7 @@ import com.zurrtum.create.catnip.math.VecHelper;
 import com.zurrtum.create.client.catnip.outliner.Outliner;
 import com.zurrtum.create.client.content.equipment.blueprint.BlueprintOverlayRenderer;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
+import com.zurrtum.create.client.foundation.utility.SwingHelper;
 import com.zurrtum.create.content.kinetics.chainConveyor.ChainConveyorBlock;
 import com.zurrtum.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
 import com.zurrtum.create.infrastructure.config.AllConfigs;
@@ -88,7 +89,7 @@ public class ChainConveyorConnectionHandler {
         if (firstPos == null || firstDim != level.dimension()) {
             firstPos = pos;
             firstDim = level.dimension();
-            player.swing(hand);
+            SwingHelper.swing(player, hand);
             return InteractionResult.CONSUME;
         }
 

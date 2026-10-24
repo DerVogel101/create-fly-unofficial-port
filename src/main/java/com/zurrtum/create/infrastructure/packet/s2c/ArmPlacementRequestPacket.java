@@ -16,6 +16,7 @@ public record ArmPlacementRequestPacket(BlockPos pos) implements Packet<ClientGa
 
     @Override
     public void handle(ClientGamePacketListener listener) {
+        AllClientHandle.INSTANCE.ensureMainThread(listener, this);
         AllClientHandle.INSTANCE.onArmPlacementRequest(this);
     }
 

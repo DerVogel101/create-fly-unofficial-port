@@ -7,6 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.PatchedDataComponentMap;
+import net.minecraft.core.component.Removed;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
 
@@ -325,8 +326,8 @@ public interface ContainerExtension extends Iterable<ItemStack> {
             if (stackComponents == otherStackComponents) {
                 return true;
             }
-            Reference2ObjectMap<DataComponentType<?>, Optional<?>> stackComponentMap = stackComponents.patch;
-            Reference2ObjectMap<DataComponentType<?>, Optional<?>> otherStackComponentMap = otherStackComponents.patch;
+            Reference2ObjectMap<DataComponentType<?>, Object> stackComponentMap = stackComponents.patch;
+            Reference2ObjectMap<DataComponentType<?>, Object> otherStackComponentMap = otherStackComponents.patch;
             if (stackComponentMap == otherStackComponentMap) {
                 return true;
             }
@@ -344,8 +345,8 @@ public interface ContainerExtension extends Iterable<ItemStack> {
                 return false;
             }
             if (hasMaxCapacityComponent) {
-                ObjectSet<Reference2ObjectMap.Entry<DataComponentType<?>, Optional<?>>> stackComponentSet = stackComponentMap.reference2ObjectEntrySet();
-                for (Reference2ObjectMap.Entry<DataComponentType<?>, Optional<?>> componentEntry : otherStackComponentMap.reference2ObjectEntrySet()) {
+                ObjectSet<Reference2ObjectMap.Entry<DataComponentType<?>, Object>> stackComponentSet = stackComponentMap.reference2ObjectEntrySet();
+                for (Reference2ObjectMap.Entry<DataComponentType<?>, Object> componentEntry : otherStackComponentMap.reference2ObjectEntrySet()) {
                     if (!stackComponentSet.contains(componentEntry) && componentEntry.getKey() != DataComponents.MAX_STACK_SIZE) {
                         return false;
                     }
@@ -422,7 +423,7 @@ public interface ContainerExtension extends Iterable<ItemStack> {
     default ItemStack removeMaxSize(ItemStack stack, Optional<Integer> max) {
         PatchedDataComponentMap components = stack.components;
         components.ensureMapOwnership();
-        components.patch.remove(DataComponents.MAX_STACK_SIZE, max);
+        components.patch.remove(DataComponents.MAX_STACK_SIZE, Removed.nullToRemoved(max.orElse(null)));
         return stack;
     }
 
@@ -430,7 +431,8 @@ public interface ContainerExtension extends Iterable<ItemStack> {
     default void setMaxSize(ItemStack stack, Optional<Integer> max) {
         PatchedDataComponentMap components = stack.components;
         components.ensureMapOwnership();
-        components.patch.put(DataComponents.MAX_STACK_SIZE, max);
+        // 26.3 patch values are the value itself or Removed (26.2 stored Optionals)
+        components.patch.put(DataComponents.MAX_STACK_SIZE, Removed.nullToRemoved(max.orElse(null)));
     }
 
     default Stream<ItemStack> stream(@Nullable Direction side) {

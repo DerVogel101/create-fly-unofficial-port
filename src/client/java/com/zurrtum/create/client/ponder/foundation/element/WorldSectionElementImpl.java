@@ -34,6 +34,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
@@ -376,7 +377,7 @@ public class WorldSectionElementImpl extends AnimatedSceneElementBase implements
                 BlockStateModel model = blockStateModelSet.get(state);
                 random.setSeed(state.getSeed(pos));
                 WrapperBlockStateModel.addPartsWithInfo(model, world, pos, state, random, parts);
-                queue.submitBreakingBlockModel(poseStack, List.copyOf(parts), entry.getValue());
+                queue.submitBreakingBlockModel(poseStack, List.copyOf(parts), entry.getValue(), model.hasMaterialFlag(BakedQuad.FLAG_TRANSLUCENT));
                 parts.clear();
                 poseStack.popPose();
             }

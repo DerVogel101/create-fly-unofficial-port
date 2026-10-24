@@ -11,7 +11,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -125,12 +128,71 @@ public class SchematicItem extends Item {
             StandardOpenOption.READ
         ))))) {
             CompoundTag nbt = NbtIo.read(stream, NbtAccounter.create(0x20000000L));
-            t.load(level.holderLookup(Registries.BLOCK), nbt);
+            // Upgrade schematics saved by older versions, like vanilla's structure loader does
+            int version = NbtUtils.getDataVersion(nbt, 500);
+            CompoundTag upgraded = DataFixTypes.STRUCTURE.updateToCurrentVersion(DataFixers.getDataFixer(), nbt, version);
+            upgradeLegacyItems(upgraded, version);
+            t.load(level.holderLookup(Registries.BLOCK), upgraded);
         } catch (IOException e) {
             LOGGER.warn("Failed to read schematic", e);
         }
 
         return t;
+    }
+
+    // 1.20.5 changed the item stack format ({Count, tag} -> {count, components}). The structure data fix upgrades items
+    // inside vanilla block entities only; upgrade the ones Create's block entities hold (inventories, filters, belts).
+    private static final int ITEM_COMPONENTS_VERSION = 3837;
+
+    public static void upgradeLegacyItems(CompoundTag structure, int version) {
+        if (version >= ITEM_COMPONENTS_VERSION) {
+            return;
+        }
+        int current = net.minecraft.SharedConstants.getCurrentVersion().dataVersion().version();
+        for (net.minecraft.nbt.Tag block : structure.getListOrEmpty("blocks")) {
+            if (block instanceof CompoundTag blockTag) {
+                blockTag.getCompound("nbt").ifPresent(be -> {
+                    if (be.getStringOr("id", "").startsWith("create:")) {
+                        upgradeItemsIn(be, version, current);
+                    }
+                });
+            }
+        }
+    }
+
+    private static void upgradeItemsIn(CompoundTag tag, int version, int current) {
+        for (String key : java.util.List.copyOf(tag.keySet())) {
+            net.minecraft.nbt.Tag child = tag.get(key);
+            if (child instanceof CompoundTag compound && isLegacyItem(compound)) {
+                tag.put(key, fixItem(compound, version, current));
+            } else if (child instanceof CompoundTag compound) {
+                upgradeItemsIn(compound, version, current);
+            } else if (child instanceof net.minecraft.nbt.ListTag list) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i) instanceof CompoundTag compound) {
+                        if (isLegacyItem(compound)) {
+                            list.set(i, fixItem(compound, version, current));
+                        } else {
+                            upgradeItemsIn(compound, version, current);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean isLegacyItem(CompoundTag tag) {
+        return tag.get("id") instanceof net.minecraft.nbt.StringTag && tag.get("Count") instanceof net.minecraft.nbt.NumericTag;
+    }
+
+    private static CompoundTag fixItem(CompoundTag item, int version, int current) {
+        try {
+            net.minecraft.nbt.Tag fixed = DataFixers.getDataFixer().update(net.minecraft.util.datafix.fixes.References.ITEM_STACK,
+                new com.mojang.serialization.Dynamic<>(net.minecraft.nbt.NbtOps.INSTANCE, item), version, current).getValue();
+            return fixed instanceof CompoundTag compound ? compound : item;
+        } catch (RuntimeException e) {
+            return item;
+        }
     }
 
     @Override

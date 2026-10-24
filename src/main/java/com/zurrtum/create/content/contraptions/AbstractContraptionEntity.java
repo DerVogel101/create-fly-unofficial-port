@@ -422,10 +422,7 @@ public abstract class AbstractContraptionEntity extends Entity {
         float angle = AngleHelper.deg(-Mth.atan2(motion.x, motion.z));
         angle = AngleHelper.angleLerp(0.4f, prevAngle, angle);
         if (level().isClientSide()) {
-            InterpolationHandler interpolator = living.getInterpolation();
-            if (interpolator != null) {
-                interpolator.interpolationData.steps = 0;
-            }
+            living.getInterpolation().cancel();
             living.lerpHeadTo(0, 0);
             living.setYRot(angle);
             living.setXRot(0);
@@ -818,7 +815,7 @@ public abstract class AbstractContraptionEntity extends Entity {
 
     @Override
     public PushReaction getPistonPushReaction() {
-        return PushReaction.IGNORE;
+        return PushReaction.IGNORE_ENTITY;
     }
 
     public void setContraptionMotion(Vec3 vec) {
@@ -887,7 +884,7 @@ public abstract class AbstractContraptionEntity extends Entity {
             riding = riding.getVehicle();
         }
 
-        return e.getPistonPushReaction() == PushReaction.NORMAL;
+        return e.getPistonPushReaction() == PushReaction.PUSH_PULL;
     }
 
     @Override

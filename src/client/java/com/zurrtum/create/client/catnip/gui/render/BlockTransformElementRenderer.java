@@ -1,9 +1,9 @@
 package com.zurrtum.create.client.catnip.gui.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import com.mojang.renderpearl.api.textures.FilterMode;
 import com.zurrtum.create.client.catnip.render.CachedBuffers;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
@@ -66,20 +66,19 @@ public class BlockTransformElementRenderer extends PictureInPictureRenderer<Bloc
             }
             matrices.scale(size, size, size);
             if (key.zRot != 0) {
-                matrices.mulPose(Axis.ZP.rotation(key.zRot));
+                matrices.rotate(Axis.ZP.rotation(key.zRot));
             }
             if (key.xRot != 0) {
-                matrices.mulPose(Axis.XP.rotation(key.xRot));
+                matrices.rotate(Axis.XP.rotation(key.xRot));
             }
             if (key.yRot != 0) {
-                matrices.mulPose(Axis.YP.rotation(key.yRot));
+                matrices.rotate(Axis.YP.rotation(key.yRot));
             }
             matrices.scale(1, -1, 1);
             matrices.translate(-0.5F, -0.5F, -0.5F);
             CachedBuffers.block(key.state).submit(matrices, submitNodeStorage);
             matrices.popPose();
-            featureRenderDispatcher.renderAllFeatures(submitNodeStorage);
-            texture.clear();
+            texture.render(featureRenderDispatcher, submitNodeStorage);
         }
         state.addBlitToCurrentLayer(new BlitRenderState(
             RenderPipelines.GUI_TEXTURED_PREMULTIPLIED_ALPHA,

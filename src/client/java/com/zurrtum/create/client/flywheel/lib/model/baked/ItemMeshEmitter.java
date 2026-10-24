@@ -1,7 +1,7 @@
 package com.zurrtum.create.client.flywheel.lib.model.baked;
 
-import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
 import com.zurrtum.create.client.flywheel.api.model.Mesh;
 import com.zurrtum.create.client.flywheel.lib.memory.MemoryBlock;
 import com.zurrtum.create.client.flywheel.lib.model.SimpleQuadMesh;
@@ -10,6 +10,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.UnknownNullability;
 import org.joml.Matrix4f;
@@ -72,7 +73,7 @@ public class ItemMeshEmitter implements VertexConsumer {
     }
 
     private void prepareForGeometry(BakedQuad quad) {
-        prepareForGeometry(quad.materialInfo().shade());
+        prepareForGeometry(quad.materialInfo().shadeDirectionOverride() != Direction.UP);
     }
 
     private void emit() {
@@ -219,6 +220,11 @@ public class ItemMeshEmitter implements VertexConsumer {
 
     @Override
     public VertexConsumer setUv2(int u, int v) {
+        throw new UnsupportedOperationException("MeshEmitter only supports putBulkData!");
+    }
+
+    @Override
+    public VertexConsumer setUv3(float u, float v) {
         throw new UnsupportedOperationException("MeshEmitter only supports putBulkData!");
     }
 

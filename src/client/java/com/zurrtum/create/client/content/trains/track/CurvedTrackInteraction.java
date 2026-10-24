@@ -5,6 +5,7 @@ import com.zurrtum.create.AllItems;
 import com.zurrtum.create.catnip.math.VecHelper;
 import com.zurrtum.create.client.content.trains.track.TrackBlockOutline.BezierPointSelection;
 import com.zurrtum.create.client.foundation.utility.CreateLang;
+import com.zurrtum.create.client.foundation.utility.SwingHelper;
 import com.zurrtum.create.content.trains.track.TrackBlockEntity;
 import com.zurrtum.create.content.trains.track.TrackTargetingBlockItem;
 import com.zurrtum.create.infrastructure.component.BezierTrackPointLocation;
@@ -73,7 +74,7 @@ public class CurvedTrackInteraction {
 
             int progress = (int) (breakProgress * 10.0F) - 1;
             level.destroyBlockProgress(player.getId(), breakPos, progress);
-            player.swing(InteractionHand.MAIN_HAND);
+            SwingHelper.swing(player, InteractionHand.MAIN_HAND);
 
             if (breakProgress >= 1) {
                 player.connection.send(new CurvedTrackDestroyPacket(

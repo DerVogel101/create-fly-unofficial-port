@@ -1,5 +1,6 @@
 package com.zurrtum.create.content.logistics.packagePort;
 
+import com.zurrtum.create.foundation.item.CustomBlockEntityTagItem;
 import com.zurrtum.create.infrastructure.packet.s2c.PackagePortPlacementRequestPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,14 +12,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
-public class PackagePortItem extends BlockItem {
+public class PackagePortItem extends BlockItem implements CustomBlockEntityTagItem {
 
     public PackagePortItem(Block pBlock, Properties pProperties) {
         super(pBlock, pProperties);
     }
 
     @Override
-    protected boolean updateCustomBlockEntityTag(
+    public boolean updateCustomBlockEntityTag(
         BlockPos pos,
         Level world,
         @Nullable Player player,
@@ -28,7 +29,7 @@ public class PackagePortItem extends BlockItem {
         if (!world.isClientSide() && player instanceof ServerPlayer sp) {
             sp.connection.send(new PackagePortPlacementRequestPacket(pos));
         }
-        return super.updateCustomBlockEntityTag(pos, world, player, p_195943_4_, p_195943_5_);
+        return BlockItem.updateCustomBlockEntityTag(world, player, pos, p_195943_4_);
     }
 
 }
