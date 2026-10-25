@@ -11,9 +11,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,7 +37,13 @@ public class JunkSlotRenderer implements IIngredientRenderer<ItemStack> {
     }
 
     @Override
-    public void getTooltip(ITooltipBuilder tooltip, ItemStack ingredient, TooltipFlag tooltipFlag) {
+    public void getTooltip(
+        ITooltipBuilder tooltip,
+        ItemStack ingredient,
+        Item.TooltipContext context,
+        @Nullable Player player,
+        TooltipFlag tooltipFlag
+    ) {
         tooltip.clear();
     }
 
