@@ -65,9 +65,9 @@ public final class FlwDebugInfo {
                     .withHoverEvent(new HoverEvent.ShowText(Component.literal(debugInfoString)))))
             .append(Component.literal("\n\nClick to open an issue on GitHub")
                 .withStyle(Style.EMPTY.withUnderlined(true).withColor(ChatFormatting.BLUE)
-                    .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://github.com/ZurrTum/Create-Fly/issues")))
+                    .withClickEvent(new ClickEvent.OpenUrl(URI.create("https://github.com/zedekvdb/create-fly-unofficial-port/issues")))
                     .withHoverEvent(new HoverEvent.ShowText(Component.literal(
-                        "Opens URL:\nhttps://github.com/ZurrTum/Create-Fly/issues")))));
+                        "Opens URL:\nhttps://github.com/zedekvdb/create-fly-unofficial-port/issues")))));
 
     }
 

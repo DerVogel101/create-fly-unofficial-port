@@ -2,15 +2,19 @@
   "schemaVersion": 1,
   "id": "create",
   "version": "${version}",
-  "name": "Create Fly",
-  "description": "Creators-of-Create/Create porting to fabric",
+  "name": "Create Fly (Unofficial 26.3 Port)",
+  "description": "Unofficial port of Create Fly (ZurrTum's Fabric port of Create) to Minecraft 26.3, with bug fixes. Not made or supported by the Create or Create Fly teams: please report problems with this build on its CurseForge page or GitHub issues, not upstream.",
   "authors": [
-    "ZurrTum"
+    "zedekvdb (26.3 port)"
+  ],
+  "contributors": [
+    "ZurrTum (Create Fly)",
+    "simibubi and the Create team (Create)"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/create-fly",
-    "sources": "https://github.com/ZurrTum/Create-Fly",
-    "issues": "https://github.com/ZurrTum/Create-Fly/issues"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/create-fly-unofficial-port",
+    "sources": "https://github.com/zedekvdb/create-fly-unofficial-port",
+    "issues": "https://github.com/zedekvdb/create-fly-unofficial-port/issues"
   },
   "license": "CC0-1.0",
   "icon": "assets/pack.png",
