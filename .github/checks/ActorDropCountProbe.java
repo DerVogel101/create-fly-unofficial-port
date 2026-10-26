@@ -30,23 +30,33 @@ public class ActorDropCountProbe implements DedicatedServerModInitializer {
     private final ItemStackHandler[] inventories = new ItemStackHandler[3];
     private int ticks;
     private int failures;
+    private int startedAt = -1;
+    private boolean done;
 
     @Override
     public void onInitializeServer() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> server.overworld().setChunkForced(5, 5, true));
         ServerTickEvents.END_SERVER_TICK.register(server -> {
-            if (++ticks == 10) {
+            ticks++;
+            if (!done && startedAt < 0 && server.overworld().isPositionEntityTicking(new BlockPos(81, 100, 81))) {
+                startedAt = ticks;
                 for (int i = 0; i < INITIAL_COUNTS.length; i++) {
                     int scenario = i;
                     check("setup " + i, () -> collect(server.overworld(), scenario));
                 }
             }
-            if (ticks == 15) {
+            if (!done && startedAt >= 0 && ticks >= startedAt + 5) {
+                done = true;
                 for (int i = 0; i < INITIAL_COUNTS.length; i++) {
                     int scenario = i;
                     check("capacity " + (64 - INITIAL_COUNTS[i]), () -> verify(server.overworld(), scenario));
                 }
                 System.out.println("ACTOR_DROP_COUNT_PROBE_RESULT failures=" + failures);
+            }
+            if (!done && ticks >= 600) {
+                done = true;
+                System.out.println("ACTOR_DROP_COUNT_FAIL chunk did not become entity-ticking");
+                System.out.println("ACTOR_DROP_COUNT_PROBE_RESULT failures=" + (++failures));
             }
         });
     }
