@@ -26,6 +26,26 @@ REQUIRED = {
     "contraption-ok", "deployer-ok", "funnel-extract-ok",
 }
 
+SERVER_PROBES = {
+    "PloughCompatibilityProbe": "PLOUGH",
+    "ScheduleProbe": "SCHEDULE",
+    "InventorySlotProbe": "INVENTORY",
+    "ToolboxIterationProbe": "TOOLBOX_ITERATION",
+    "ToolboxDyeProbe": "TOOLBOX_DYE",
+    "ExtractionLimitProbe": "EXTRACTION_LIMIT",
+    "BasinArmOutputProbe": "BASIN_ARM_OUTPUT",
+    "ActorDropCountProbe": "ACTOR_DROP_COUNT",
+}
+
+
+def probe_failures(log):
+    failed = []
+    for name in SERVER_PROBES.values():
+        results = re.findall(rf"\b{name}_PROBE_RESULT failures=(\d+)\b", log)
+        if not results or any(int(result) != 0 for result in results):
+            failed.append(name)
+    return failed
+
 
 def failures(server_log, restart_log):
     checks = {
@@ -44,6 +64,11 @@ def markers(log):
 
 
 def self_test():
+    probes = "".join(f"{name}_PROBE_RESULT failures=0\n" for name in SERVER_PROBES.values())
+    assert not probe_failures(probes)
+    for name in SERVER_PROBES.values():
+        assert probe_failures(probes.replace(f"{name}_PROBE_RESULT failures=0", f"{name}_PROBE_RESULT failures=1"))
+        assert probe_failures(probes.replace(f"{name}_PROBE_RESULT failures=0", "missing"))
     server = "Done (1s)!\nPlayer joined the game\n" + "".join(
         f"[Server] CHECK {name}\n" for name in sorted(REQUIRED)
     )
@@ -197,7 +222,17 @@ def main(checks_only=False, online=False):
                                 "-cp", os.pathsep.join([launch["classpath"], *api_paths]), "-d", str(classes),
                                 *map(str, sorted((FIXTURES / "checks").glob("*.java")))],
                                stdout=output, stderr=subprocess.STDOUT, check=True, creationflags=creationflags)
-            probes = ["PloughCompatibilityProbe", "ScheduleProbe", "InventorySlotProbe"]
+            client_classes = run / "client-check-classes"
+            client_classes.mkdir()
+            with (run / "client-check.log").open("w") as output:
+                subprocess.run([str(Path(launch["executable"]).with_name("javac.exe" if os.name == "nt" else "javac")),
+                                "-cp", launch["classpath"], "-d", str(client_classes),
+                                str(FIXTURES / "checks/client/EmptyBufferProbe.java")],
+                               stdout=output, stderr=subprocess.STDOUT, check=True, creationflags=creationflags)
+                subprocess.run([launch["executable"], "-cp", os.pathsep.join([str(client_classes), launch["classpath"]]),
+                                "probe.EmptyBufferProbe"], stdout=output, stderr=subprocess.STDOUT,
+                               check=True, creationflags=creationflags)
+            probes = list(SERVER_PROBES)
             with zipfile.ZipFile(server / "mods/checks.jar", "w") as archive:
                 archive.writestr("fabric.mod.json", json.dumps({"schemaVersion": 1, "id": "create_regression_checks",
                     "version": "1.0.0", "environment": "server",
@@ -206,11 +241,9 @@ def main(checks_only=False, online=False):
                 for path in classes.rglob("*.class"):
                     archive.write(path, path.relative_to(classes).as_posix())
             game = start(server_command, server, "server.log")
-            if game.wait(timeout=180) != 0:
-                failed.append(f"Regression server exit {game.returncode}")
-            for name in ("PLOUGH", "SCHEDULE", "INVENTORY"):
-                if f"{name}_PROBE_RESULT failures=0" not in read("server.log"):
-                    failed.append(f"{name.lower()} regression checks; see server.log")
+            wait_for(game, "server.log", "ACTOR_DROP_COUNT_PROBE_RESULT failures=", timeout=180)
+            stop(game)
+            failed.extend(f"{name.lower()} regression checks; see server.log" for name in probe_failures(read("server.log")))
             failed.extend(f"crash report: {path}" for path in run.glob("*/crash-reports/*"))
             return bool(failed)
         game = start(server_command, server, "server.log")
@@ -255,7 +288,7 @@ def main(checks_only=False, online=False):
                     process.wait(timeout=30)
         summary = {"passed": not failed, "failures": failed,
                    "mode": "server-checks" if checks_only else "gameplay-smoke",
-                   "skipped": "Client and gameplay scene/restart checks" if checks_only else "Linux GUI input, screenshots, inventory and Ponder checks; release publishing",
+                   "skipped": "Client GUI and gameplay scene/restart checks" if checks_only else "Linux GUI input, screenshots, inventory and Ponder checks; release publishing",
                    "command_errors": [line for line in (read("server.log") + read("server2.log")).splitlines()
                                       if "<--[HERE]" in line],
                    "server_markers": sorted(markers(read("server.log"))),

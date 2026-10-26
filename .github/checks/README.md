@@ -13,7 +13,8 @@ python .github/smoke-test.py --online
 Omit `--online` once Gradle dependencies are cached. Fabric/Minecraft server
 downloads can still require network access for a fresh test world.
 
-`--checks` builds the production jar and runs three server probes:
+`--checks` builds the production jar, checks the empty client buffer without a
+graphics context, and runs eight server probes:
 
 - Six plough checks: actual tilling, the port's playerless offhand use, and
   unchanged player/shield/sneaking behavior. The old port used a null-player
@@ -22,6 +23,17 @@ downloads can still require network access for a fresh test world.
   item, instruction execution, delay advancement and departure predictions.
 - Seven inventory checks: dense and sparse contents, clearing stale slots,
   empty contents, and the linked-controller, list-filter and package callers.
+- Toolbox iteration and recoloring: multiple linked players, menu balancing,
+  all dye colors, and preservation of the toolbox state, contents and links.
+- Moving actor drops: full, partial and zero insertion conserve items after
+  normal server ticks in an active chunk.
+- Extraction limits: simulation, live extraction, normal stacks and exact-count
+  boundaries preserve both legal stack sizes and total item counts.
+- Basin/arm extraction: ingredients stay put, selected slots are honored,
+  simulation does not mutate, and sided restrictions still apply.
+
+The runner waits for the delayed actor probe before stopping the server and
+rejects missing or nonzero results from every server probe.
 
 The default mode opens one test client, runs the carried-over machine scene,
 requires all seven gameplay success markers, and verifies server restart and the

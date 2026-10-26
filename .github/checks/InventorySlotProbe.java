@@ -63,7 +63,6 @@ public class InventorySlotProbe implements DedicatedServerModInitializer {
                 expectSlots(PackageItem.getContents(box), sparse());
             });
             System.out.println("INVENTORY_PROBE_RESULT failures=" + failures);
-            server.halt(false);
         });
     }
 
