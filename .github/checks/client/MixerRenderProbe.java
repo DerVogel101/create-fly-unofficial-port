@@ -33,7 +33,12 @@ public class MixerRenderProbe implements ClientModInitializer {
 
     private void run(Minecraft client) {
         System.out.println("MIXER_RENDER_CLASS_SOURCE " + MechanicalMixerRenderer.class.getProtectionDomain().getCodeSource().getLocation());
-        BlockPos first = client.player.blockPosition().offset(2, 3, 0);
+        BlockPos candidate = client.player.blockPosition().offset(2, 3, 0);
+        while (candidate.getY() < client.level.getMaxY() - 1
+            && (!client.level.isEmptyBlock(candidate) || !client.level.isEmptyBlock(candidate.east()))) {
+            candidate = candidate.above();
+        }
+        BlockPos first = candidate;
         BlockPos second = first.east();
         boolean ownsPositions = false;
         try {
