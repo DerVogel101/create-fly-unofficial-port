@@ -14,7 +14,7 @@ Omit `--online` once Gradle dependencies are cached. Fabric/Minecraft server
 downloads can still require network access for a fresh test world.
 
 `--checks` builds the production jar, checks the empty client buffer without a
-graphics context, and runs eight server probes:
+graphics context, and runs twelve server probes:
 
 - Six plough checks: actual tilling, the port's playerless offhand use, and
   unchanged player/shield/sneaking behavior. The old port used a null-player
@@ -31,6 +31,15 @@ graphics context, and runs eight server probes:
   boundaries preserve both legal stack sizes and total item counts.
 - Basin/arm extraction: ingredients stay put, selected slots are honored,
   simulation does not mutate, and sided restrictions still apply.
+
+- Slotted item/fluid adapters: advertised capacities, heterogeneous slots,
+  simulation, transfer conservation and unchanged Direct adapters.
+- Stacked Fabric container filling: spout eligibility, per-item demand, metadata,
+  rejected fluids and item/fluid conservation at counts 1, 5 and 64.
+- Fluid matching: internal capacity differences, real component equality,
+  transaction rollback and transfer limits.
+- Accumulated counts: integer text, missing/reset defaults and labels. Raw
+  before/after screenshot evidence is under `screenshots/`.
 
 The runner waits for the delayed actor probe before stopping the server and
 rejects missing or nonzero results from every server probe.

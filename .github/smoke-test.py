@@ -34,6 +34,10 @@ SERVER_PROBES = {
     "ToolboxDyeProbe": "TOOLBOX_DYE",
     "ExtractionLimitProbe": "EXTRACTION_LIMIT",
     "BasinArmOutputProbe": "BASIN_ARM_OUTPUT",
+    "SlottedCapacityProbe": "SLOTTED_CAPACITY",
+    "StackedFillingProbe": "STACKED_FILLING",
+    "FluidMatchingProbe": "FLUID_MATCHING",
+    "AccumulatedCountProbe": "ACCUMULATED_COUNT",
     "ActorDropCountProbe": "ACTOR_DROP_COUNT",
 }
 
@@ -213,7 +217,10 @@ def main(checks_only=False, online=False):
             api_paths = []
             with zipfile.ZipFile(api) as archive:
                 for name in archive.namelist():
-                    if any("/" + prefix in name for prefix in ("fabric-lifecycle-events-v1-", "fabric-api-base-")) and name.endswith(".jar"):
+                    if any("/" + prefix in name for prefix in (
+                        "fabric-lifecycle-events-v1-", "fabric-api-base-",
+                        "fabric-transfer-api-v1-", "fabric-api-lookup-api-v1-",
+                    )) and name.endswith(".jar"):
                         path = run / Path(name).name
                         path.write_bytes(archive.read(name))
                         api_paths.append(str(path))
